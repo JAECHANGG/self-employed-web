@@ -1,5 +1,7 @@
-import SignInPage from "./sign-in/page";
+"use client";
+
+import { signIn } from "next-auth/react";
 
 export default function Home() {
-  return <SignInPage />;
+  return <button onClick={() => signIn()}>login</button>;
 }
