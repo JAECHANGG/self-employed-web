@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .kakao-button {
+    @apply p-6 bg-yellow-500 rounded-lg outline-none border-0 h-12 w-full flex items-center text-sm text-white cursor-pointer;
+  }
+}

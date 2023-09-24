@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .app-wrap {
+    @apply flex flex-col max-w-screen-md h-screen mx-auto;
+  }
+}
