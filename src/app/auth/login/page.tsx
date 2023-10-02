@@ -1,10 +1,11 @@
 import Login from "@/components/Login";
 
-import "./page.css";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { getProviders } from "next-auth/react";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
+import { getProviders } from "next-auth/react";
+import Image from "next/image";
+import { redirect } from "next/navigation";
+import "./page.css";
 
 interface Props {
   searchParams: {
@@ -14,7 +15,7 @@ interface Props {
 
 const LoginPage = async ({ searchParams: { callbackUrl } }: Props) => {
   const session = await getServerSession(authOptions);
-
+  console.log("session", session);
   if (session) {
     redirect("/");
   }
@@ -23,7 +24,7 @@ const LoginPage = async ({ searchParams: { callbackUrl } }: Props) => {
   return (
     <div className="sign-in-page-wrap">
       <div className="logo-wrap">
-        <img
+        <Image
           className="logo-image"
           width={200}
           height={200}

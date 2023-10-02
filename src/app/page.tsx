@@ -1,22 +1,43 @@
-import { v4 as uuidv4 } from "uuid";
-import { BestBoardPreview } from "@/components/board-preview/BestBoardPreview";
-import { MockBoardPreview } from "@/components/board-preview/MockBoard";
-import { RecentBoardPreview } from "@/components/board-preview/RecentBoardPreview";
-import { PromotionSwiper } from "@/components/swiper/PromotionSwiper";
+import Login from "@/components/Login";
 
-const componentList = [
-  { component: <PromotionSwiper /> },
-  { component: <BestBoardPreview /> },
-  { component: <RecentBoardPreview /> },
-  { component: <MockBoardPreview /> },
-];
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
+import { getProviders } from "next-auth/react";
+import Image from "next/image";
+import { redirect } from "next/navigation";
+import "./page.css";
 
-export default function HomePage() {
+interface Props {
+  searchParams: {
+    callbackUrl: string;
+  };
+}
+
+const LoginPage = async ({ searchParams: { callbackUrl } }: Props) => {
+  const session = await getServerSession(authOptions);
+  console.log("session", session);
+  if (session) {
+    redirect("/home");
+  }
+
+  const providers = (await getProviders()) ?? {};
   return (
-    <div className="h-[90vh] overflow-x-hidden overflow-y-auto px-5 py-7">
-      {componentList.map((item) => (
-        <section key={uuidv4()}>{item.component}</section>
-      ))}
+    <div className="sign-in-page-wrap">
+      <div className="logo-wrap">
+        <Image
+          className="logo-image"
+          width={200}
+          height={200}
+          src="https://yt3.googleusercontent.com/ytc/AOPolaTZzFi9FuptnL36UNZ4q2zNXPjtn4hVk9FGGlpX=s900-c-k-c0x00ffffff-no-rj"
+          alt="logo image"
+        />
+        <div className="logo-title">장사의 신</div>
+      </div>
+      <div className="login-wrap">
+        <Login providers={providers} callbackUrl={callbackUrl} />
+      </div>
     </div>
   );
-}
+};
+
+export default LoginPage;

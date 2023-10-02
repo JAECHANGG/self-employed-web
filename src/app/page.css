@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .sign-in-page-wrap {
+    @apply box-border p-4 flex flex-col justify-between items-center h-screen w-full;
+  }
+
+  .logo-wrap {
+    @apply flex flex-col items-center w-full;
+  }
+
+  .logo-image {
+    @apply rounded-full;
+  }
+
+  .logo-title {
+    /* 추가적인 스타일링이 필요하면 여기에 적용 */
+  }
+
+  .login-wrap {
+    @apply flex flex-col w-full;
+  }
+}

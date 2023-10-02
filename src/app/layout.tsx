@@ -1,10 +1,11 @@
+import AuthContext from "@/components/AuthContext";
+import { BottomNavigate } from "@/components/layout/BottomNavigate";
+import { Header } from "@/components/layout/Header";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 import { Provider } from "./provider";
-import AuthContext from "@/components/AuthContext";
-import { Header } from "@/components/layout/Header";
-import { BottomNavigate } from "@/components/layout/BottomNavigate";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,14 +19,18 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const headersList = headers();
+  const pathname = headersList.get("x-invoke-path");
+  const isNotLoginPage = pathname !== "/";
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <AuthContext>
           <Provider>
-            <Header />
+            {isNotLoginPage && <Header />}
             <main className="h-[90vh]">{children}</main>
-            <BottomNavigate />
+            {isNotLoginPage && <BottomNavigate />}
           </Provider>
         </AuthContext>
       </body>

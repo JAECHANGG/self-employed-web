@@ -5,6 +5,9 @@ const nextConfig = {
       "custom-gray": "#e3e3e3",
     },
   },
+  images: {
+    domains: ["yt3.googleusercontent.com", "*"],
+  },
 };
 
 module.exports = nextConfig;

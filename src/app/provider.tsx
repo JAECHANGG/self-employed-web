@@ -4,9 +4,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode } from "react";
 import { RecoilRoot } from "recoil";
 import "./provider.css";
-import { signIn, useSession } from "next-auth/react";
-import LoginPage from "./auth/login/page";
-import HomePage from "./page";
 
 interface Props {
   children: ReactNode;
@@ -37,13 +34,9 @@ const queryClient = new QueryClient({
 });
 
 export function Provider({ children }: Props) {
-  const { data: session } = useSession();
-  console.log({ session });
-
   return (
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
-        {/* <button onClick={() => signIn()}>login</button> */}
         <div className="app-wrap">{children}</div>
       </RecoilRoot>
     </QueryClientProvider>
