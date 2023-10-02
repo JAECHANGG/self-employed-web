@@ -19,7 +19,7 @@ export const boardTitleMap: { [key: string]: boardComponent } = {
   노하우게시판: { id: "knowhowboard", icon: <SchoolIcon /> },
   홍보게시판: { id: "promotionboard", icon: <CampaignIcon /> },
   구인구직게시판: { id: "jobseekingboard", icon: <PersonSearchIcon /> },
-  "Q&A게시판": { id: "qandaboard", icon: <QuestionAnswerIcon /> },
+  "Q&A게시판": { id: "qnaboard", icon: <QuestionAnswerIcon /> },
 };
 
 const BoardsPage = () => {
