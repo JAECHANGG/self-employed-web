@@ -13,7 +13,7 @@ interface boardComponent {
   icon: React.ReactNode;
 }
 
-const boardTitleMap: { [key: string]: boardComponent } = {
+export const boardTitleMap: { [key: string]: boardComponent } = {
   인기게시판: { id: "bestboard", icon: <ThumbUpAltIcon /> },
   자유게시판: { id: "freeboard", icon: <ArticleIcon /> },
   노하우게시판: { id: "knowhowboard", icon: <SchoolIcon /> },
@@ -29,7 +29,7 @@ const BoardsPage = () => {
         {Object.keys(boardTitleMap).map((title, index) => (
           <li key={title}>
             <Link
-              href={boardTitleMap[title].id}
+              href={`/boards/${boardTitleMap[title].id}`}
               className="flex items-center justify-between mb-1 h-16 rounded-lg cursor-pointer"
             >
               <div className="flex items-center">
