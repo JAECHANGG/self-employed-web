@@ -94,12 +94,9 @@ export const BoardContainer = () => {
       <article className="h-full overflow-x-hidden overflow-y-auto p-4">
         {dummyData.map((data: any) => {
           return (
-            <Link href={`${pathname}/${data.id}`}>
-              <div
-                key={data.id}
-                className="border border-blue-200 rounded-lg mb-5 p-4 cursor-pointer"
-              >
-                <h1 className="text-2xl font-bold truncate mb-3">
+            <Link href={`${pathname}/${data.id}`} key={data.id}>
+              <div className="border border-blue-200 rounded-lg mb-5 p-4 cursor-pointer">
+                <h1 className="text-xl font-bold truncate mb-3">
                   {data.title}
                 </h1>
                 <div className="text-base line-clamp-2 mb-3">

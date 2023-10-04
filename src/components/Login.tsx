@@ -13,7 +13,12 @@ export default function Login({ providers, callbackUrl }: Props) {
     <>
       {Object.values(providers).map(({ name, id }) => (
         <div key={id}>
-          <button onClick={() => signIn(id, { callbackUrl })}>로그인</button>
+          <button
+            className="w-full transform rounded-md bg-gray-700 px-4 py-2 mb-2 tracking-wide text-white transition-colors duration-200 hover:bg-gray-600 focus:bg-gray-600 focus:outline-none"
+            onClick={() => signIn(id, { callbackUrl })}
+          >
+            {`${name} 로그인`}
+          </button>
         </div>
       ))}
     </>

@@ -15,7 +15,7 @@ export const ExpandBoardPreviewPresenter: React.FC<Props> = ({
   items,
 }) => {
   return (
-    <div className="flex flex-col mt-20 border border-blue-200 p-4 rounded-lg">
+    <div className="flex flex-col mt-5 border border-blue-200 p-4 rounded-lg">
       <span className="text-2xl font-semibold mb-4">{boardPreviewTitle}</span>
       <div>
         {items.map((item, index) => (
