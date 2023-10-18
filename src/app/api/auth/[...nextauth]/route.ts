@@ -1,3 +1,4 @@
+import { addUser } from "@/service/user";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import KakaoProvider from "next-auth/providers/kakao";
@@ -21,6 +22,32 @@ export const authOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: "/",
+  },
+  callbacks: {
+    async signIn({ user: { id, email, name, image } }) {
+      if (!email) {
+        return false;
+      }
+      addUser({
+        id,
+        email,
+        name: name || "",
+        username: email.split("@")[0],
+        image,
+      });
+      return true;
+    },
+    async session({ session }) {
+      console.log({ session });
+      const user = session?.user;
+      if (user) {
+        session.user = {
+          ...user,
+          username: user.email?.split("@")[0] || "",
+        };
+      }
+      return session;
+    },
   },
 };
 const handler = NextAuth(authOptions);
