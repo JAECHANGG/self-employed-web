@@ -13,7 +13,7 @@ interface boardComponent {
 }
 
 const boardTitleMap: { [key: string]: boardComponent } = {
-  닉네임: { id: "bestboard", icon: <ThumbUpAltIcon /> },
+  "내 정보 보기": { id: "detail", icon: <ThumbUpAltIcon /> },
   "알림 설정": { id: "freeboard", icon: <ArticleIcon /> },
   version: { id: "knowhowboard", icon: <SchoolIcon /> },
   로그아웃: { id: "logout", icon: <CampaignIcon /> },
