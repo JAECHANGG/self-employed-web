@@ -1,7 +1,6 @@
 "use client";
 
 import { ClientSafeProvider, signIn } from "next-auth/react";
-import React from "react";
 
 interface Props {
   providers: Record<string, ClientSafeProvider>;

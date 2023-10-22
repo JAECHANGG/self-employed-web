@@ -4,6 +4,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import SchoolIcon from "@mui/icons-material/School";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import Link from "next/link";
 import React from "react";
 
 interface boardComponent {
@@ -15,7 +16,7 @@ const boardTitleMap: { [key: string]: boardComponent } = {
   닉네임: { id: "bestboard", icon: <ThumbUpAltIcon /> },
   "알림 설정": { id: "freeboard", icon: <ArticleIcon /> },
   version: { id: "knowhowboard", icon: <SchoolIcon /> },
-  로그아웃: { id: "promotionboard", icon: <CampaignIcon /> },
+  로그아웃: { id: "logout", icon: <CampaignIcon /> },
   회원탈퇴: { id: "jobseekingboard", icon: <PersonSearchIcon /> },
 };
 
@@ -24,8 +25,8 @@ export default function MyPage() {
     <ul className="space-y-1 p-4">
       {Object.keys(boardTitleMap).map((title, index) => (
         <li key={title}>
-          <div
-            id={boardTitleMap[title].id}
+          <Link
+            href={`/mypage/${boardTitleMap[title].id}`}
             className="flex items-center justify-between mb-1 h-16 rounded-lg cursor-pointer"
           >
             <div className="flex items-center">
@@ -39,7 +40,7 @@ export default function MyPage() {
                 <ChevronRightIcon style={{ color: "#012851" }} />
               </div>
             </div>
-          </div>
+          </Link>
           {index === 0 && <div className="bg-gray-200 h-[1px] my-5"></div>}
         </li>
       ))}
