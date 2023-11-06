@@ -9,7 +9,8 @@ export default {
     {title: 'Content', name: 'content', type: 'string'},
     {title: 'CreatedAt', name: 'createdAt', type: 'string'},
     {title: 'Author', name: 'author', type: 'reference', to: [{type: 'user'}]},
-    {title: 'Photos', name: 'photos', type: 'array', of: [{type: 'image'}]},
+    // {title: 'Photos', name: 'photos', type: 'array', of: [{type: 'image'}]},
+    {title: 'Photos', name: 'photos', type: 'image'},
     {
       title: 'Likes',
       name: 'likes',

@@ -3,12 +3,12 @@
 import { useCreatePostMutation } from "@/query/post-query";
 import { CreatePostPayload } from "@/types/post/payload";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 export const BoardWrite = () => {
   const { data: session, status } = useSession();
 
-  const initPayload = {
+  const initPayload: CreatePostPayload = {
     title: "",
     boardCategory: "",
     content: "",
@@ -16,6 +16,7 @@ export const BoardWrite = () => {
     photos: [],
   };
   const [payload, setPayload] = useState<CreatePostPayload>(initPayload);
+  const [images, setImages] = useState<string[]>([]);
   const createPostMutation = useCreatePostMutation();
 
   const handleClickCreateButton = () => {
@@ -24,7 +25,9 @@ export const BoardWrite = () => {
     formData.append("boardCategory", payload.boardCategory);
     formData.append("content", payload.content);
     formData.append("author", payload.author);
-    formData.append("photos", "");
+    payload.photos.forEach((photo) => {
+      formData.append("photos", photo);
+    });
     console.log(payload);
     createPostMutation.mutate(formData);
   };
@@ -36,16 +39,25 @@ export const BoardWrite = () => {
     setPayload({ ...payload, [name]: value });
   };
 
-  if (!session) {
-    // TODO 에러처리
-    return <div>에러</div>;
-  }
+  const handleChangeImageHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files !== null) {
+      const newFile = event.target.files[0];
+      setPayload({ ...payload, photos: [newFile] });
+      const imageUrl = URL.createObjectURL(newFile);
+      setImages([imageUrl]);
+    }
+  };
 
   useEffect(() => {
     if (status === "authenticated") {
       setPayload({ ...payload, author: session.user.id });
     }
   }, [status]);
+
+  if (!session) {
+    // TODO session 없음 처리
+    return <div>session없음</div>;
+  }
 
   return (
     <div>
@@ -74,6 +86,8 @@ export const BoardWrite = () => {
           onChange={handleChangePayload}
           name="content"
         />
+        <img className="rounded-full" src={images[0] || ""} alt="post_image" />
+        <input type="file" onChange={handleChangeImageHandler} />
       </div>
     </div>
   );

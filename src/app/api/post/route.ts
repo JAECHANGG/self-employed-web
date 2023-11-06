@@ -7,18 +7,13 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const form = await req.formData();
-  console.log(form.get("title"));
-  console.log(form.get("boardCategory"));
-  console.log(form.get("content"));
-  console.log(form.get("author"));
-  console.log(form.get("photos"));
 
   const payload = {
-    title: form.get("title"),
-    boardCategory: form.get("boardCategory"),
-    content: form.get("content"),
-    author: form.get("author"),
-    photos: form.get("photos"),
+    title: form.get("title")?.toString() || "",
+    boardCategory: form.get("boardCategory")?.toString() || "",
+    content: form.get("content")?.toString() || "",
+    author: form.get("author")?.toString() || "",
+    photos: [form.get("photos") as File],
   };
 
   return createPost(payload).then((data) => NextResponse.json(data));

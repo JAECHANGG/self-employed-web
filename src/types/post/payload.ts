@@ -3,5 +3,5 @@ export interface CreatePostPayload {
   boardCategory: string;
   content: string;
   author: string;
-  photos: string[];
+  photos: File[];
 }

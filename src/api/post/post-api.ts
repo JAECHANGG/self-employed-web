@@ -17,11 +17,7 @@ class PostApi {
     return await this._api.get(`${PostApiUrl.GetPost}`);
   }
 
-  // async create(payload: CreatePostPayload): Promise<string> {
-  //   return await this._api.post(`${PostApiUrl.Create}`, payload);
-  // }
-
-  async create(payload: any): Promise<string> {
+  async create(payload: FormData): Promise<string> {
     return await this._api.post(`${PostApiUrl.Create}`, payload);
   }
 }

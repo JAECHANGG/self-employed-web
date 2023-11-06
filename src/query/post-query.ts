@@ -13,20 +13,10 @@ export const useGetAllPostQuery = () => {
   });
 };
 
-// export const useCreatePostMutation = () => {
-//   return useMutation({
-//     mutationKey: [PostQueryKey.Create],
-//     mutationFn: (payload: CreatePostPayload) => postApi.create(payload),
-//     onSuccess: (response) => {
-//       console.log("success", response);
-//     },
-//   });
-// };
-
 export const useCreatePostMutation = () => {
   return useMutation({
     mutationKey: [PostQueryKey.Create],
-    mutationFn: (payload: any) => postApi.create(payload),
+    mutationFn: (payload: FormData) => postApi.create(payload),
     onSuccess: (response) => {
       console.log("success", response);
     },
