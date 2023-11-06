@@ -2,9 +2,8 @@ import { client } from "./sanity";
 
 export async function updateMe(userId: string, text: string, file: Blob) {
   console.log("hi", userId, text, file);
-  client
+  return client
     .patch(userId)
-    .set({ username: text })
-    .set({ image: file })
+    .set({ username: text, image: file })
     .commit({ autoGenerateArrayKeys: true });
 }

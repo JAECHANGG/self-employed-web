@@ -1,12 +1,16 @@
 "use client";
 
+import Modal from "@/components/Modal";
+import ModalPortal from "@/components/ModalPortal";
 import { useGetMeQuery } from "@/query/me-query";
 import Image from "next/image";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 export default function DetailPage() {
   const { data, isLoading } = useGetMeQuery();
+
   const [error, setError] = useState<string>();
+  const [openModal, setOpenModal] = useState(false);
   const [uploadedImage, setUploadedImage] = useState("");
   const [nickname, setNickname] = useState("");
 
@@ -43,7 +47,7 @@ export default function DetailPage() {
         }
       })
       .catch((e) => setError(e.toString()))
-      .finally();
+      .finally(() => setOpenModal(false));
   };
 
   useEffect(() => {
@@ -59,7 +63,7 @@ export default function DetailPage() {
 
   return (
     <div>
-      <form onSubmit={onSubmitHandler}>
+      <form>
         <Image
           className="rounded-full"
           src={uploadedImage || data?.data.image}
@@ -73,9 +77,19 @@ export default function DetailPage() {
           value={nickname || ""}
           onChange={onChangeNicknameHandler}
         />
-        <button>변경</button>
+        <button type="button" onClick={() => setOpenModal(true)}>
+          변경
+        </button>
       </form>
       <div>{data?.data.email}</div>
+      {openModal && (
+        <ModalPortal>
+          <Modal
+            onClick={onSubmitHandler}
+            onClose={() => setOpenModal(false)}
+          />
+        </ModalPortal>
+      )}
     </div>
   );
 }

@@ -33,6 +33,7 @@ export default function RootLayout({
             {isNotLoginPage && <BottomNavigate />}
           </Provider>
         </AuthContext>
+        <div id="portal" />
       </body>
     </html>
   );
