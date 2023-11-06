@@ -88,10 +88,12 @@ const dummyData = [
 export const BoardContainer = () => {
   const headersList = headers();
   const pathname = headersList.get("x-invoke-path");
+  const category = pathname?.split("/")[2];
 
   return (
     <>
       <article className="h-full overflow-x-hidden overflow-y-auto p-4">
+        <Link href={`/boards/write/${category}`}>글쓰기 버튼</Link>
         {dummyData.map((data: any) => {
           return (
             <Link href={`${pathname}/${data.id}`} key={data.id}>
