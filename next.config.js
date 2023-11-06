@@ -6,7 +6,7 @@ const nextConfig = {
     },
   },
   images: {
-    domains: ["yt3.googleusercontent.com", "*"],
+    domains: ["yt3.googleusercontent.com", "lh3.googleusercontent.com", "*"],
   },
 };
 

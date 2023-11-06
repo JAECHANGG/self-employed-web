@@ -15,6 +15,10 @@ class MeApi {
   async getMe(): Promise<any> {
     return await this._api.get(`${MeApiUrl.GetMe}`);
   }
+
+  async updateMe(): Promise<any> {
+    return await this._api.put(`${MeApiUrl.GetMe}`);
+  }
 }
 
 export const meApi = new MeApi(baseApi);
