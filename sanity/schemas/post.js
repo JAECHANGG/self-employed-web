@@ -13,9 +13,7 @@ export default {
     {
       title: 'Likes',
       name: 'likes',
-      type: 'array',
-      of: [{type: 'reference', to: [{type: 'user'}]}],
-      validation: (Rule) => Rule.unique(),
+      type: 'number',
     },
     {
       title: 'View',
@@ -34,6 +32,12 @@ export default {
           fields: [
             {title: 'Author', name: 'author', type: 'reference', to: [{type: 'user'}]},
             {title: 'Comment', name: 'comment', type: 'string'},
+            {title: 'CreatedAt', name: 'createdAt', type: 'string'},
+            {
+              title: 'Likes',
+              name: 'likes',
+              type: 'number',
+            },
           ],
         },
       ],
