@@ -3,6 +3,7 @@ import { baseApi } from "../base-api";
 
 enum PostApiUrl {
   GetPost = "/post",
+  Create = "/post",
 }
 
 class PostApi {
@@ -14,6 +15,14 @@ class PostApi {
 
   async getAllPost(): Promise<any> {
     return await this._api.get(`${PostApiUrl.GetPost}`);
+  }
+
+  // async create(payload: CreatePostPayload): Promise<string> {
+  //   return await this._api.post(`${PostApiUrl.Create}`, payload);
+  // }
+
+  async create(payload: any): Promise<string> {
+    return await this._api.post(`${PostApiUrl.Create}`, payload);
   }
 }
 
