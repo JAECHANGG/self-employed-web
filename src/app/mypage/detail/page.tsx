@@ -2,14 +2,13 @@
 
 import { useGetMeQuery } from "@/query/me-query";
 import Image from "next/image";
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 export default function DetailPage() {
   const { data, isLoading } = useGetMeQuery();
   const [error, setError] = useState<string>();
   const [uploadedImage, setUploadedImage] = useState("");
   const [nickname, setNickname] = useState("");
-  const nicknameRef = useRef<HTMLInputElement>(null);
 
   const onChangeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files !== null) {
@@ -23,15 +22,18 @@ export default function DetailPage() {
     }
   };
 
+  const onChangeNicknameHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setNickname(e.target.value);
+  };
+
   const onSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData();
     formData.append("file", uploadedImage);
-    formData.append(
-      "nickname",
-      nicknameRef.current?.value || data?.data.username
-    );
+    formData.append("text", nickname);
+
+    console.log(formData);
 
     fetch("/api/me", { method: "PUT", body: formData })
       .then((res) => {
@@ -66,7 +68,11 @@ export default function DetailPage() {
           height={300}
         />
         <input type="file" onChange={onChangeImageHandler} />
-        <input type="text" ref={nicknameRef} />
+        <input
+          type="text"
+          value={nickname || ""}
+          onChange={onChangeNicknameHandler}
+        />
         <button>변경</button>
       </form>
       <div>{data?.data.email}</div>
