@@ -10,7 +10,7 @@ export const BoardWrite = () => {
 
   const initPayload: CreatePostPayload = {
     title: "",
-    boardCategory: "",
+    category: "",
     content: "",
     author: "",
     photos: [],
@@ -22,7 +22,7 @@ export const BoardWrite = () => {
   const handleClickCreateButton = () => {
     const formData = new FormData();
     formData.append("title", payload.title);
-    formData.append("boardCategory", payload.boardCategory);
+    formData.append("category", payload.category);
     formData.append("content", payload.content);
     formData.append("author", payload.author);
     payload.photos.forEach((photo) => {
@@ -77,7 +77,7 @@ export const BoardWrite = () => {
             style={{ background: "green" }}
             placeholder="카테고리"
             onChange={handleChangePayload}
-            name="boardCategory"
+            name="category"
           />
         </div>
         <textarea

@@ -2,14 +2,14 @@ import { postApi } from "@/api/post/post-api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export enum PostQueryKey {
-  GetAllPost = "getAllPost",
+  GetPostsByCategory = "GetPostsByCategory",
   Create = "CreatePost",
 }
 
-export const useGetAllPostQuery = () => {
+export const useGetPostsByCategoryQuery = (category: string) => {
   return useQuery({
-    queryKey: [PostQueryKey.GetAllPost],
-    queryFn: () => postApi.getAllPost(),
+    queryKey: [PostQueryKey.GetPostsByCategory],
+    queryFn: () => postApi.getPostsByCategory(category),
   });
 };
 

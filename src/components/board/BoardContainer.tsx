@@ -1,100 +1,29 @@
+"use client";
+
+import { postApi } from "@/api/post/post-api";
+import { useGetPostsByCategoryQuery } from "@/query/post-query";
+import { HHmmTime } from "@/util/time-util";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import { headers } from "next/headers";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 
-const dummyData = [
-  {
-    id: uuidv4(),
-    title: "무자본 자영업 업종으로 뭐가 좋을까요? 질문드립니다.",
-    content:
-      "안녕하세요 이번에 회사를 그만두고 자영업을 시작하려고 합니다. 많은 분야가 있겠지만 현재는 요식업을 생각중인데 다른 괜찮은 아이템이 있을까요?",
-    time: "17:30",
-    nickname: "장사의 신",
-    comment: 3,
-    isLike: 7,
-    view: 100,
-  },
-  {
-    id: uuidv4(),
-    title: "무자본 자영업 업종으로 뭐가 좋을까요? 질문드립니다.",
-    content:
-      "안녕하세요 이번에 회사를 그만두고 자영업을 시작하려고 합니다. 많은 분야가 있겠지만 현재는 요식업을 생각중인데 다른 괜찮은 아이템이 있을까요?",
-    time: "17:30",
-    nickname: "장사의 신",
-    comment: 3,
-    isLike: 7,
-    view: 100,
-  },
-  {
-    id: uuidv4(),
-    title: "무자본 자영업 업종으로 뭐가 좋을까요? 질문드립니다.",
-    content:
-      "안녕하세요 이번에 회사를 그만두고 자영업을 시작하려고 합니다. 많은 분야가 있겠지만 현재는 요식업을 생각중인데 다른 괜찮은 아이템이 있을까요?",
-    time: "17:30",
-    nickname: "장사의 신",
-    comment: 3,
-    isLike: 7,
-    view: 100,
-  },
-  {
-    id: uuidv4(),
-    title: "무자본 자영업 업종으로 뭐가 좋을까요? 질문드립니다.",
-    content:
-      "안녕하세요 이번에 회사를 그만두고 자영업을 시작하려고 합니다. 많은 분야가 있겠지만 현재는 요식업을 생각중인데 다른 괜찮은 아이템이 있을까요?",
-    time: "17:30",
-    nickname: "장사의 신",
-    comment: 3,
-    isLike: 7,
-    view: 100,
-  },
-  {
-    id: uuidv4(),
-    title: "무자본 자영업 업종으로 뭐가 좋을까요? 질문드립니다.",
-    content:
-      "안녕하세요 이번에 회사를 그만두고 자영업을 시작하려고 합니다. 많은 분야가 있겠지만 현재는 요식업을 생각중인데 다른 괜찮은 아이템이 있을까요?",
-    time: "17:30",
-    nickname: "장사의 신",
-    comment: 3,
-    isLike: 7,
-    view: 100,
-  },
-  {
-    id: uuidv4(),
-    title: "무자본 자영업 업종으로 뭐가 좋을까요? 질문드립니다.",
-    content:
-      "안녕하세요 이번에 회사를 그만두고 자영업을 시작하려고 합니다. 많은 분야가 있겠지만 현재는 요식업을 생각중인데 다른 괜찮은 아이템이 있을까요?",
-    time: "17:30",
-    nickname: "장사의 신",
-    comment: 3,
-    isLike: 7,
-    view: 100,
-  },
-  {
-    id: uuidv4(),
-    title: "무자본 자영업 업종으로 뭐가 좋을까요? 질문드립니다.",
-    content:
-      "안녕하세요 이번에 회사를 그만두고 자영업을 시작하려고 합니다. 많은 분야가 있겠지만 현재는 요식업을 생각중인데 다른 괜찮은 아이템이 있을까요?",
-    time: "17:30",
-    nickname: "장사의 신",
-    comment: 3,
-    isLike: 7,
-    view: 100,
-  },
-];
-
 export const BoardContainer = () => {
-  const headersList = headers();
-  const pathname = headersList.get("x-invoke-path");
+  // const headersList = headers();
+  // const pathname = headersList.get("x-invoke-path");
+  const pathname = usePathname();
   const category = pathname?.split("/")[2];
+  const { data: postsByCategory } = useGetPostsByCategoryQuery(category || "");
+  console.log("postsByCategory", postsByCategory);
 
   return (
     <>
       <article className="h-full overflow-x-hidden overflow-y-auto p-4">
         <Link href={`/boards/write/${category}`}>글쓰기 버튼</Link>
-        {dummyData.map((data: any) => {
+        {postsByCategory?.map((data) => {
           return (
             <Link href={`${pathname}/${data.id}`} key={data.id}>
               <div className="border border-blue-200 rounded-lg mb-5 p-4 cursor-pointer">
@@ -105,17 +34,17 @@ export const BoardContainer = () => {
                   {data.content}
                 </div>
                 <div className="flex items-center text-sm">
-                  <span className="font-bold mr-2">{data.nickname}</span>
-                  <span>{data.time}</span>
+                  <span className="font-bold mr-2">{data.username}</span>
+                  <span>{HHmmTime(data.createdAt)}</span>
                   <span className="text-red-500 ml-2 flex items-center">
                     <FavoriteBorderIcon style={{ height: 15 }} />
-                    {data.isLike}
+                    {data.like}
                   </span>
                   <span className="text-blue-500 ml-2 flex items-center">
                     <ChatBubbleOutlineIcon
                       style={{ height: 14, paddingTop: 2 }}
                     />
-                    {data.comment}
+                    {data.commentNumber}
                   </span>
                   <span className="text-green-500 ml-2 flex items-center">
                     <RemoveRedEyeOutlinedIcon style={{ height: 16 }} />

@@ -1,9 +1,11 @@
 import { AxiosInstance } from "axios";
 import { baseApi } from "../base-api";
+import { PostByCategoryDto } from "@/types/post/dto";
 
 enum PostApiUrl {
   GetPost = "/post",
   Create = "/post",
+  Delete = "/post",
 }
 
 class PostApi {
@@ -13,12 +15,16 @@ class PostApi {
     this._api = api;
   }
 
-  async getAllPost(): Promise<any> {
-    return await this._api.get(`${PostApiUrl.GetPost}`);
+  async getPostsByCategory(category: string): Promise<PostByCategoryDto[]> {
+    return await this._api.get(`${PostApiUrl.GetPost}/${category}`);
   }
 
   async create(payload: FormData): Promise<string> {
     return await this._api.post(`${PostApiUrl.Create}`, payload);
+  }
+
+  async deletePostsAll(): Promise<null> {
+    return await this._api.delete(`${PostApiUrl.Delete}`);
   }
 }
 

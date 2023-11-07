@@ -4,7 +4,7 @@ import { BestBoardPreview } from "@/components/board-preview/BestBoardPreview";
 import { MockBoardPreview } from "@/components/board-preview/MockBoard";
 import { RecentBoardPreview } from "@/components/board-preview/RecentBoardPreview";
 import { PromotionSwiper } from "@/components/swiper/PromotionSwiper";
-import { useGetAllPostQuery } from "@/query/post-query";
+import { useGetPostsByCategoryQuery } from "@/query/post-query";
 import { v4 as uuidv4 } from "uuid";
 
 const componentList = [
@@ -15,8 +15,6 @@ const componentList = [
 ];
 
 export default function HomePage() {
-  const { data } = useGetAllPostQuery();
-  console.log("data", data);
   return (
     <div className="h-[90vh] overflow-x-hidden overflow-y-auto px-5 py-7">
       {componentList.map((item) => (
