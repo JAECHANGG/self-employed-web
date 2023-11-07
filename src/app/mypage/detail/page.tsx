@@ -11,7 +11,8 @@ export default function DetailPage() {
 
   const [error, setError] = useState<string>();
   const [openModal, setOpenModal] = useState(false);
-  const [uploadedImage, setUploadedImage] = useState("");
+  const [uploadedImage, setUploadedImage] = useState<File>();
+  const [imageSrc, setImageSrc] = useState("");
   const [nickname, setNickname] = useState("");
 
   const onChangeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -21,8 +22,9 @@ export default function DetailPage() {
         return;
       }
       const file = e.target.files[0];
+      setUploadedImage(file);
       const imageUrl = URL.createObjectURL(file);
-      setUploadedImage(imageUrl);
+      setImageSrc(imageUrl);
     }
   };
 
@@ -34,7 +36,9 @@ export default function DetailPage() {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("file", uploadedImage);
+    if (uploadedImage) {
+      formData.append("file", uploadedImage);
+    }
     formData.append("text", nickname);
 
     console.log(formData);
@@ -55,7 +59,7 @@ export default function DetailPage() {
       setNickname(data?.data.username);
     }
     if (!uploadedImage) {
-      setUploadedImage(data?.data.image);
+      setImageSrc(data?.data.image);
     }
   }, [data]);
 
@@ -64,12 +68,10 @@ export default function DetailPage() {
   return (
     <div>
       <form>
-        <Image
-          className="rounded-full"
-          src={uploadedImage || data?.data.image}
+        <img
+          className="rounded-full w-24 h-24"
+          src={imageSrc || data?.data.image}
           alt="profile_image"
-          width={300}
-          height={300}
         />
         <input type="file" onChange={onChangeImageHandler} />
         <input

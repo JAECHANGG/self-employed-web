@@ -10,6 +10,7 @@ const nextConfig = {
       "yt3.googleusercontent.com",
       "lh3.googleusercontent.com",
       "k.kakaocdn.net",
+      "ssl.pstatic.net",
       "*",
     ],
   },

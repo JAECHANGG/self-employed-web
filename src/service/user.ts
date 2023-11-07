@@ -12,6 +12,7 @@ export async function addUser({ id, email, name, username, image }: OAuthUser) {
   return client.createIfNotExists({
     _id: id,
     _type: "user",
+    id,
     email,
     name,
     username,
@@ -19,11 +20,6 @@ export async function addUser({ id, email, name, username, image }: OAuthUser) {
   });
 }
 
-export async function getUserByEmail(email: string) {
-  return client.fetch(
-    `*[_type == "user" && email == "${email}"][0]{
-        ...,
-        "id":_id,
-      }`
-  );
+export async function getUserById(id: string) {
+  return client.fetch(`*[_type == "user" && id == "${id}"][0]`);
 }
