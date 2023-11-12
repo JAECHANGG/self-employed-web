@@ -28,14 +28,14 @@ export const authOptions: NextAuthOptions = {
       if (!email) {
         return false;
       }
-      addUser({
+      const result = addUser({
         id,
         email,
         name: name || "",
         username: email.split("@")[0],
         image,
       });
-      return true;
+      return result;
     },
     async session({ session, token }) {
       const user = session?.user;
