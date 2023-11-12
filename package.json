@@ -25,11 +25,8 @@
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",
     "moment": "^2.29.4",
-<<<<<<< HEAD
     "mongodb": "^6.2.0",
     "mongoose": "^8.0.0",
-=======
->>>>>>> parent of 322c3dd (mongoDB 연결 및 tsconfig target ES2017 변경)
     "next": "13.4.19",
     "next-auth": "^4.23.1",
     "postcss": "8.4.28",
