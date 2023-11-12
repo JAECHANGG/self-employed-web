@@ -28,7 +28,7 @@ export const authOptions: NextAuthOptions = {
       if (!email) {
         return false;
       }
-      const result = addUser({
+      const result = await addUser({
         id,
         email,
         name: name || "",

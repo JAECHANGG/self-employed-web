@@ -56,10 +56,10 @@ export default function DetailPage() {
 
   useEffect(() => {
     if (!nickname) {
-      setNickname(data?.data.username);
+      setNickname(data?.username);
     }
     if (!uploadedImage) {
-      setImageSrc(data?.data.image);
+      setImageSrc(data?.image);
     }
   }, [data]);
 
@@ -70,7 +70,7 @@ export default function DetailPage() {
       <form>
         <img
           className="rounded-full w-24 h-24"
-          src={imageSrc || data?.data.image}
+          src={imageSrc || data?.image}
           alt="profile_image"
         />
         <input type="file" onChange={onChangeImageHandler} />
@@ -83,7 +83,7 @@ export default function DetailPage() {
           변경
         </button>
       </form>
-      <div>{data?.data.email}</div>
+      <div>{data?.email}</div>
       {openModal && (
         <ModalPortal>
           <Modal

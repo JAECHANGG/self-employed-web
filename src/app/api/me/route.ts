@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getUserById } from "@/service/user";
 import { authOptions } from "../auth/[...nextauth]/route";
 import { updateMe } from "@/service/me";
+import dbConnect from "@/util/database";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
