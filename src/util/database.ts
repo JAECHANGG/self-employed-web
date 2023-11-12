@@ -19,6 +19,6 @@ async function setMongoConnect() {
   }
 }
 
-setMongoConnect();
+await setMongoConnect();
 
 export { connectDB };
