@@ -1,24 +1,23 @@
-import { MongoClient } from "mongodb";
+import mongoose from "mongoose";
 
-let connectDB: any;
-let globalWithMongo = global as typeof globalThis & {
-  mongoClient: MongoClient;
-};
-const MONGODB_URI = process.env.MONGODB_URI as string;
-
-async function setMongoConnect() {
-  if (process.env.NODE_ENV === "development") {
-    if (!globalWithMongo.mongoClient) {
-      globalWithMongo.mongoClient = await new MongoClient(
-        MONGODB_URI
-      ).connect();
-    }
-    connectDB = globalWithMongo.mongoClient;
-  } else {
-    connectDB = await new MongoClient(MONGODB_URI).connect();
-  }
+interface Connection {
+  isConnected?: number;
 }
 
-await setMongoConnect();
+const connection: Connection = {};
 
-export { connectDB };
+const MONGODB_URI = process.env.MONGODB_URI || "";
+
+async function dbConnect() {
+  if (connection.isConnected) {
+    return;
+  }
+
+  const db = await mongoose.connect(MONGODB_URI);
+
+  connection.isConnected = db.connections[0].readyState;
+
+  console.log("dbConnect", connection.isConnected);
+}
+
+export default dbConnect;
