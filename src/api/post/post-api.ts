@@ -4,7 +4,7 @@ import { AxiosInstance } from "axios";
 import { baseApi } from "../base-api";
 
 enum PostApiUrl {
-  GetPost = "/post",
+  GetPostsByCategory = "/post/category",
   Create = "/post",
 }
 
@@ -16,7 +16,7 @@ class PostApi {
   }
 
   async getPostsByCategory(category: string): Promise<PostByCategoryDto[]> {
-    return await this._api.get(`${PostApiUrl.GetPost}/${category}`);
+    return await this._api.get(`${PostApiUrl.GetPostsByCategory}/${category}`);
   }
 
   async create(payload: CreatePostPayload): Promise<string> {

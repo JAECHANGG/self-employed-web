@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getPostsByCategory } from "../../../../service/post";
+import { getPostsByCategory } from "../../../../../service/post";
 
 interface Context {
   params: {
