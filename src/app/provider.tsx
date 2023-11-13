@@ -9,7 +9,7 @@ interface Props {
   children: ReactNode;
 }
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 60 * 5 * 1000,

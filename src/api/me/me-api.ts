@@ -1,10 +1,10 @@
-import { updateMe } from "@/service/me";
+import { UpdateMePayload } from "@/types/me/payload";
 import { AxiosInstance } from "axios";
 import { baseApi } from "../base-api";
 
 enum MeApiUrl {
-  GetMe = "/me",
-  UpdateMe = "/me",
+  Get = "/me",
+  Update = "/me",
 }
 
 class MeApi {
@@ -14,12 +14,12 @@ class MeApi {
     this._api = api;
   }
 
-  async getMe(): Promise<any> {
-    return await this._api.get(`${MeApiUrl.GetMe}`);
+  async get(): Promise<any> {
+    return await this._api.get(`${MeApiUrl.Get}`);
   }
 
-  async updateMe(payload: any): Promise<any> {
-    return await this._api.put(`${MeApiUrl.UpdateMe}`, payload);
+  async update(payload: UpdateMePayload): Promise<null> {
+    return await this._api.patch(`${MeApiUrl.Update}`, payload);
   }
 }
 

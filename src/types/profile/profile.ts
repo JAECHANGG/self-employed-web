@@ -1,11 +1,11 @@
 export interface Profile {
   id: string;
   email: string;
-  nickname: string;
+  username: string;
 }
 
 export interface UpdateProfile {
   id: string;
   email: string;
-  nickname: string;
+  username: string;
 }

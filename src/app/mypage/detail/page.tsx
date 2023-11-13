@@ -2,65 +2,72 @@
 
 import Modal from "@/components/Modal";
 import ModalPortal from "@/components/ModalPortal";
-import { useGetMeQuery } from "@/query/me-query";
-import Image from "next/image";
+import { useGetMeQuery, useUpdateMeMutation } from "@/query/me-query";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 export default function DetailPage() {
   const { data, isLoading } = useGetMeQuery();
+  const updateMeMutation = useUpdateMeMutation();
 
   const [error, setError] = useState<string>();
   const [openModal, setOpenModal] = useState(false);
-  const [uploadedImage, setUploadedImage] = useState<File>();
   const [imageSrc, setImageSrc] = useState("");
-  const [nickname, setNickname] = useState("");
+  const [username, setUsername] = useState("");
+  // const [uploadedImage, setUploadedImage] = useState<File>();
 
-  const onChangeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files !== null) {
-      if (!e.target.files[0]) {
-        setUploadedImage((prev) => prev);
-        return;
-      }
-      const file = e.target.files[0];
-      setUploadedImage(file);
-      const imageUrl = URL.createObjectURL(file);
-      setImageSrc(imageUrl);
-    }
-  };
+  // const onChangeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files !== null) {
+  //     if (!e.target.files[0]) {
+  //       setUploadedImage((prev) => prev);
+  //       return;
+  //     }
+  //     const file = e.target.files[0];
+  //     setUploadedImage(file);
+  //     const imageUrl = URL.createObjectURL(file);
+  //     setImageSrc(imageUrl);
+  //   }
+  // };
 
-  const onChangeNicknameHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setNickname(e.target.value);
+  const onChangeUsernameHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
   };
 
   const onSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    updateMeMutation.mutateAsync(
+      { username },
+      {
+        onError: (error) => {
+          console.log("error", error);
+        },
+      }
+    );
 
-    const formData = new FormData();
-    if (uploadedImage) {
-      formData.append("file", uploadedImage);
-    }
-    formData.append("text", nickname);
+    setOpenModal(false);
 
-    console.log(formData);
-
-    fetch("/api/me", { method: "PUT", body: formData })
-      .then((res) => {
-        if (!res.ok) {
-          setError(`${res.status} ${res.statusText}`);
-          return;
-        }
-      })
-      .catch((e) => setError(e.toString()))
-      .finally(() => setOpenModal(false));
+    // const formData = new FormData();
+    // if (uploadedImage) {
+    //   formData.append("file", uploadedImage);
+    // }
+    // formData.append("text", username);
+    // fetch("/api/me", { method: "PUT", body: { username } })
+    //   .then((res) => {
+    //     if (!res.ok) {
+    //       setError(`${res.status} ${res.statusText}`);
+    //       return;
+    //     }
+    //   })
+    //   .catch((e) => setError(e.toString()))
+    //   .finally(() => setOpenModal(false));
   };
 
   useEffect(() => {
-    if (!nickname) {
-      setNickname(data?.username);
+    if (!username) {
+      setUsername(data?.username);
     }
-    if (!uploadedImage) {
-      setImageSrc(data?.image);
-    }
+    // if (!uploadedImage) {
+    //   setImageSrc(data?.image);
+    // }
   }, [data]);
 
   if (isLoading) return <div>loading...</div>;
@@ -73,11 +80,11 @@ export default function DetailPage() {
           src={imageSrc || data?.image}
           alt="profile_image"
         />
-        <input type="file" onChange={onChangeImageHandler} />
+        {/* <input type="file" onChange={onChangeImageHandler} /> */}
         <input
           type="text"
-          value={nickname || ""}
-          onChange={onChangeNicknameHandler}
+          value={username || ""}
+          onChange={onChangeUsernameHandler}
         />
         <button type="button" onClick={() => setOpenModal(true)}>
           변경

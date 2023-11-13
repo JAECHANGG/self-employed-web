@@ -3,5 +3,4 @@ export interface CreatePostPayload {
   category: string;
   content: string;
   author: string;
-  photos: File[];
 }

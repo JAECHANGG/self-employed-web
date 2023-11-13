@@ -1,6 +1,5 @@
 import { User } from "@/schemas/user";
 import dbConnect from "@/util/database";
-import mongoose from "mongoose";
 
 interface OAuthUser {
   id: string;
@@ -24,7 +23,7 @@ export async function addUser({ id, email, name, username, image }: OAuthUser) {
     console.log("탐색 중 에러 error", error);
     return false;
   } finally {
-    mongoose.connection.close();
+    // mongoose.connection.close();
   }
 }
 
@@ -38,7 +37,7 @@ export async function getUserById(socialId: string) {
     console.log("user 정보를 찾을 수 없습니다.", error);
     return false;
   } finally {
-    mongoose.connection.close();
+    // mongoose.connection.close();
   }
 }
 
@@ -59,6 +58,6 @@ async function createUser({ id, email, name, username, image }: OAuthUser) {
     console.error("사용자 생성 중 오류 발생:", error);
     return false;
   } finally {
-    mongoose.connection.close();
+    // mongoose.connection.close();
   }
 }

@@ -1,17 +1,23 @@
-import { client } from "./sanity";
+import { User } from "@/schemas/user";
+import dbConnect from "@/util/database";
 
-export async function updateMe(userId: string, text: string, file: File) {
-  console.log("hi", userId, text, file);
-  await client.assets
-    .upload("image", file, {
-      contentType: file.type,
-      filename: file.name,
-    })
-    .then((document) => {
-      console.log("document", document);
-      return client
-        .patch(userId)
-        .set({ username: text, image: document.url })
-        .commit({ autoGenerateArrayKeys: true });
-    });
+export async function updateMe(userId: string, username: string) {
+  await dbConnect();
+
+  try {
+    await User.findOneAndUpdate(
+      {
+        socialId: userId,
+      },
+      {
+        username,
+      }
+    );
+    return true;
+  } catch (error) {
+    console.log("updateMe fail:", error);
+    return false;
+  } finally {
+    // mongoose.connection.close();
+  }
 }
