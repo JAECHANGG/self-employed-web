@@ -41,7 +41,6 @@ async function savePost(userObjectId: string, payload: CreatePostPayload) {
 
 export async function getPostsByCategory(category: string) {
   await dbConnect();
-  console.log("!!", category);
 
   try {
     const result = await Post.find({ category }).populate("author");
@@ -58,6 +57,27 @@ export async function getPostsByCategory(category: string) {
     }));
   } catch (error) {
     console.log("getPostsByCategory error", error);
+    return [];
+  }
+}
+
+export async function getPostById(id: string) {
+  await dbConnect();
+
+  try {
+    const result = await Post.findOne({ _id: id }).populate("author");
+    return {
+      id: result._id,
+      createdAt: result.createdAt,
+      title: result.title,
+      content: result.content,
+      username: result.author.username,
+      like: result.like,
+      commentNumber: result.comments.length,
+      view: result.view,
+    };
+  } catch (error) {
+    console.log("getPostById error", error);
     return [];
   }
 }

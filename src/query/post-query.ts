@@ -3,9 +3,17 @@ import { CreatePostPayload } from "@/types/post/payload";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export enum PostQueryKey {
+  GetPostsById = "GetPostsById",
   GetPostsByCategory = "GetPostsByCategory",
   Create = "CreatePost",
 }
+
+export const useGetPostByIdQuery = (id: string) => {
+  return useQuery({
+    queryKey: [PostQueryKey.GetPostsById],
+    queryFn: () => postApi.getPostById(id),
+  });
+};
 
 export const useGetPostsByCategoryQuery = (category: string) => {
   return useQuery({

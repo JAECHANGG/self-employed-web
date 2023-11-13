@@ -1,5 +1,4 @@
 import { meApi } from "@/api/me/me-api";
-import { queryClient } from "@/app/provider";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export enum MeQueryKey {
@@ -18,9 +17,5 @@ export const useUpdateMeMutation = () => {
   return useMutation({
     mutationKey: [MeQueryKey.updateMe],
     mutationFn: (payload: any) => meApi.update(payload),
-    onSuccess: (response) => {
-      queryClient.invalidateQueries([MeQueryKey.GetMe]);
-      console.log("success", response);
-    },
   });
 };
