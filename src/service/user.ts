@@ -1,7 +1,6 @@
 import { User } from "@/schemas/user";
 import dbConnect from "@/util/database";
 import mongoose from "mongoose";
-import { client } from "./sanity";
 
 interface OAuthUser {
   id: string;
@@ -17,10 +16,9 @@ export async function addUser({ id, email, name, username, image }: OAuthUser) {
   try {
     const existingUser = await User.findOne({ socialId: id });
     if (existingUser) {
-      // 이미 존재하는 유저네임이라면 중복 처리
-      console.log("이미 존재하는 유저네임입니다:", existingUser.username);
+      console.log("이미 존재하는 유저", existingUser.username);
       mongoose.connection.close();
-      return false;
+      return true;
     }
 
     const user = new User({
