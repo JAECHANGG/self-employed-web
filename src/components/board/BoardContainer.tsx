@@ -1,23 +1,31 @@
 "use client";
 
-import { postApi } from "@/api/post/post-api";
-import { useGetPostsByCategoryQuery } from "@/query/post-query";
+import { queryClient } from "@/app/provider";
+import { PostQueryKey, useGetPostsByCategoryQuery } from "@/query/post-query";
 import { HHmmTime } from "@/util/time-util";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
+import { useEffect } from "react";
 
 export const BoardContainer = () => {
   // const headersList = headers();
   // const pathname = headersList.get("x-invoke-path");
   const pathname = usePathname();
   const category = pathname?.split("/")[2];
-  const { data: postsByCategory } = useGetPostsByCategoryQuery(category || "");
-  console.log("postsByCategory", postsByCategory);
+  const { data: postsByCategory, isFetching } = useGetPostsByCategoryQuery(
+    category || ""
+  );
+
+  useEffect(() => {
+    return () => {
+      queryClient.invalidateQueries([PostQueryKey.GetPostsByCategory]);
+    };
+  }, []);
+
+  if (isFetching) return <div>로딩중</div>;
 
   return (
     <>

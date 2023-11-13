@@ -2,7 +2,6 @@ import { Post } from "@/schemas/post";
 import { User } from "@/schemas/user";
 import { CreatePostPayload } from "@/types/post/payload";
 import dbConnect from "@/util/database";
-import { client } from "./sanity";
 
 export async function createPost(payload: CreatePostPayload) {
   await dbConnect();
@@ -41,19 +40,24 @@ async function savePost(userObjectId: string, payload: CreatePostPayload) {
 }
 
 export async function getPostsByCategory(category: string) {
+  await dbConnect();
   console.log("!!", category);
-  return client
-    .fetch(
-      `*[_type == "post" && category == "${category}"]{
-        "id":_id,
-        "createdAt": _createdAt,
-        "title": title,
-        "content" : content,
-        "username": author->username,
-        "like": like,
-        "commentNumber": count(comments),
-        "view": view
-      }`
-    )
-    .then((post) => post);
+
+  try {
+    const result = await Post.find({ category }).populate("author");
+    console.log("result", result);
+    return result.map((post) => ({
+      id: post._id,
+      createdAt: post.createdAt,
+      title: post.title,
+      content: post.content,
+      username: post.author.username,
+      like: post.like,
+      commentNumber: post.comments.length,
+      view: post.view,
+    }));
+  } catch (error) {
+    console.log("getPostsByCategory error", error);
+    return [];
+  }
 }
