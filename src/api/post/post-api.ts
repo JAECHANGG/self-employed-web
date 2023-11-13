@@ -1,6 +1,7 @@
+import { PostByCategoryDto } from "@/types/post/dto";
+import { CreatePostPayload } from "@/types/post/payload";
 import { AxiosInstance } from "axios";
 import { baseApi } from "../base-api";
-import { PostByCategoryDto } from "@/types/post/dto";
 
 enum PostApiUrl {
   GetPost = "/post",
@@ -19,7 +20,7 @@ class PostApi {
     return await this._api.get(`${PostApiUrl.GetPost}/${category}`);
   }
 
-  async create(payload: FormData): Promise<string> {
+  async create(payload: CreatePostPayload): Promise<string> {
     return await this._api.post(`${PostApiUrl.Create}`, payload);
   }
 

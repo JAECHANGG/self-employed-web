@@ -1,41 +1,43 @@
+import { Post } from "@/schemas/post";
+import { User } from "@/schemas/user";
 import { CreatePostPayload } from "@/types/post/payload";
-import { v4 as uuidv4 } from "uuid";
+import dbConnect from "@/util/database";
 import { client } from "./sanity";
 
 export async function createPost(payload: CreatePostPayload) {
-  // if (payload.photos.length > 0) {
-  //   client.assets
-  //     .upload("image", payload.photos[0], {
-  //       contentType: payload.photos[0].type,
-  //       filename: payload.photos[0].name,
-  //     })
-  //     .then((document) => {
-  //       return client.create({
-  //         _type: "post",
-  //         id: uuidv4(),
-  //         title: payload.title,
-  //         category: payload.category,
-  //         content: payload.content,
-  //         author: { _ref: payload.author },
-  //         like: 0,
-  //         view: 0,
-  //         comments: [],
-  //         photos: { asset: { _ref: document._id } },
-  //       });
-  //     });
-  // }
+  await dbConnect();
 
-  return client.create({
-    _type: "post",
-    id: uuidv4(),
+  try {
+    const existingUser = await User.findOne({ socialId: payload.author });
+    if (!existingUser) {
+      console.log("존재하지 않는 유저입니다.");
+      return false;
+    }
+
+    return savePost(existingUser._id, payload);
+  } catch (error) {
+    console.log("user 탐색 중 오류.", error);
+    return false;
+  }
+}
+
+async function savePost(userObjectId: string, payload: CreatePostPayload) {
+  const post = new Post({
     title: payload.title,
     category: payload.category,
     content: payload.content,
-    author: { _ref: payload.author },
-    like: 0,
-    view: 0,
+    author: userObjectId,
     comments: [],
   });
+
+  try {
+    await post.save();
+    console.log("새로운 포스트가 생성되었습니다");
+    return true;
+  } catch (error) {
+    console.error("포스트 생성 중 오류 발생:", error);
+    return false;
+  }
 }
 
 export async function getPostsByCategory(category: string) {

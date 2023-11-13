@@ -1,4 +1,5 @@
 import { postApi } from "@/api/post/post-api";
+import { CreatePostPayload } from "@/types/post/payload";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export enum PostQueryKey {
@@ -16,7 +17,7 @@ export const useGetPostsByCategoryQuery = (category: string) => {
 export const useCreatePostMutation = () => {
   return useMutation({
     mutationKey: [PostQueryKey.Create],
-    mutationFn: (payload: FormData) => postApi.create(payload),
+    mutationFn: (payload: CreatePostPayload) => postApi.create(payload),
     onSuccess: (response) => {
       console.log("success", response);
     },
