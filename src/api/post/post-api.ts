@@ -6,7 +6,6 @@ import { baseApi } from "../base-api";
 enum PostApiUrl {
   GetPost = "/post",
   Create = "/post",
-  Delete = "/post",
 }
 
 class PostApi {
@@ -22,10 +21,6 @@ class PostApi {
 
   async create(payload: CreatePostPayload): Promise<string> {
     return await this._api.post(`${PostApiUrl.Create}`, payload);
-  }
-
-  async deletePostsAll(): Promise<null> {
-    return await this._api.delete(`${PostApiUrl.Delete}`);
   }
 }
 

@@ -57,10 +57,3 @@ export async function getPostsByCategory(category: string) {
     )
     .then((post) => post);
 }
-
-export async function deletePostsAll() {
-  return client
-    .delete({ query: '*[_type == "post"][0...999]' })
-    .then(console.log)
-    .catch(console.error);
-}

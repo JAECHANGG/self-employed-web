@@ -1,6 +1,6 @@
 import { CreatePostPayload } from "@/types/post/payload";
-import { NextRequest, NextResponse } from "next/server";
-import { createPost, deletePostsAll } from "../../../service/post";
+import { NextRequest } from "next/server";
+import { createPost } from "../../../service/post";
 
 export async function POST(request: NextRequest) {
   const createPostRequest: CreatePostPayload = await request.json();
@@ -10,8 +10,4 @@ export async function POST(request: NextRequest) {
       ? new Response("Good Response", { status: 200 })
       : new Response("Bad Response", { status: 500 })
   );
-}
-
-export async function DELETE() {
-  return deletePostsAll().then((data) => NextResponse.json(data));
 }
