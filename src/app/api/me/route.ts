@@ -36,6 +36,6 @@ export async function PATCH(request: NextRequest) {
   return updateMe(user.id, username).then((data) =>
     data
       ? new Response("Good Response", { status: 200 })
-      : new Response("Bad Response", { status: 400 })
+      : new Response("Bad Response", { status: 500 })
   );
 }

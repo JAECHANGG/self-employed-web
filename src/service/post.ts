@@ -65,17 +65,7 @@ export async function getPostById(id: string) {
   await dbConnect();
 
   try {
-    const result = await Post.findOne({ _id: id }).populate("author");
-    return {
-      id: result._id,
-      createdAt: result.createdAt,
-      title: result.title,
-      content: result.content,
-      username: result.author.username,
-      like: result.like,
-      commentNumber: result.comments.length,
-      view: result.view,
-    };
+    return await Post.findOne({ _id: id }).populate("author");
   } catch (error) {
     console.log("getPostById error", error);
     return [];

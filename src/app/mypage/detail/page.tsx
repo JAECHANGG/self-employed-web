@@ -1,8 +1,13 @@
 "use client";
 
+import { queryClient } from "@/app/provider";
 import Modal from "@/components/Modal";
 import ModalPortal from "@/components/ModalPortal";
-import { useGetMeQuery, useUpdateMeMutation } from "@/query/me-query";
+import {
+  MeQueryKey,
+  useGetMeQuery,
+  useUpdateMeMutation,
+} from "@/query/me-query";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 export default function DetailPage() {
@@ -34,16 +39,17 @@ export default function DetailPage() {
 
   const onSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    updateMeMutation.mutateAsync(
+    updateMeMutation.mutate(
       { username },
       {
         onError: (error) => {
           console.log("error", error);
         },
+        onSuccess: () => {
+          setOpenModal(false);
+        },
       }
     );
-
-    setOpenModal(false);
 
     // const formData = new FormData();
     // if (uploadedImage) {
