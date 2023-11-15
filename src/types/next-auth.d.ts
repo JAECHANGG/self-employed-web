@@ -1,4 +1,4 @@
-import { User } from "../model/user";
+import { User } from "./user";
 
 declare module "next-auth" {
   interface Session {

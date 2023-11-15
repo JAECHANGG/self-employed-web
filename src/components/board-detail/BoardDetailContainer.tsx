@@ -30,13 +30,7 @@ export const BoardDetailContainer = ({ id }: Props) => {
       <div className="flex flex-col h-[83vh]">
         <div className="flex flex-col">
           <div className="mb-5">
-            <BoardDetailContentHeader
-              src={data.author.image}
-              userId={data.author.socialId}
-              me={me?.socialId || ""}
-              id={data._id}
-              category={data.category}
-            />
+            <BoardDetailContentHeader data={data} me={me?.socialId || ""} />
           </div>
           <div className="font-bold text-2xl mb-5">{data.title}</div>
           <div className="mb-10">{data.content}</div>
