@@ -2,7 +2,7 @@ import Image from "next/image";
 import food from "/public/asset/promotion/food.png";
 
 interface Props {
-  sx?: any;
+  sx?: { height: string; width: string };
 }
 
 export const FoodIcon: React.FC<Props> = ({ sx }) => {
