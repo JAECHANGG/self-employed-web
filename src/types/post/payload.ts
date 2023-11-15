@@ -11,3 +11,9 @@ export interface UpdatePostPayload {
   content: string;
   id: string;
 }
+
+export interface CreateCommentPayload {
+  comment: string;
+  author: string;
+  id: string;
+}

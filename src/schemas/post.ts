@@ -4,7 +4,7 @@ const commentSchema = new Schema(
   {
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     comment: { type: String, required: true },
-    likes: { type: Number, default: 0 },
+    like: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
@@ -18,7 +18,7 @@ const postSchema = new Schema(
     photos: { type: String },
     like: { type: Number, default: 0 },
     view: { type: Number, default: 0 },
-    comments: [commentSchema],
+    comments: { type: [commentSchema] },
   },
   { timestamps: true }
 );

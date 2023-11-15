@@ -9,6 +9,6 @@ interface Context {
 
 export async function GET(request: NextRequest, context: Context) {
   const { slug: category } = context.params;
-  console.log("category", category);
+  // console.log("category", category);
   return getPostsByCategory(category).then((data) => NextResponse.json(data));
 }

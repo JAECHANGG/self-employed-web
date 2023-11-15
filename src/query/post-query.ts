@@ -1,5 +1,9 @@
 import { postApi } from "@/api/post/post-api";
-import { CreatePostPayload, UpdatePostPayload } from "@/types/post/payload";
+import {
+  CreateCommentPayload,
+  CreatePostPayload,
+  UpdatePostPayload,
+} from "@/types/post/payload";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export enum PostQueryKey {
@@ -7,6 +11,7 @@ export enum PostQueryKey {
   GetPostsByCategory = "GetPostsByCategory",
   Create = "CreatePost",
   Update = "UpdatePost",
+  CreateComment = "CreateComment",
 }
 
 export const useGetPostByIdQuery = (id: string) => {
@@ -40,6 +45,17 @@ export const useUpdatePostMutation = () => {
     mutationFn: (payload: UpdatePostPayload) => postApi.update(payload),
     onSuccess: (response) => {
       console.log("success", response);
+    },
+  });
+};
+
+export const useCreateCommentMutation = () => {
+  return useMutation({
+    mutationKey: [PostQueryKey.CreateComment],
+    mutationFn: (payload: CreateCommentPayload) =>
+      postApi.createComment(payload),
+    onSuccess: (response) => {
+      console.log("create comment", response);
     },
   });
 };

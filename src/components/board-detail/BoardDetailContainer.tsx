@@ -9,7 +9,7 @@ import { Comment } from "./comment/Comment";
 import { CommentInput } from "./comment/CommentInput";
 import { useGetPostByIdQuery } from "@/query/post-query";
 import { useGetMeQuery } from "@/query/me-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   id: string;
@@ -18,6 +18,8 @@ interface Props {
 export const BoardDetailContainer = ({ id }: Props) => {
   const { data, isLoading } = useGetPostByIdQuery(id);
   const { data: me } = useGetMeQuery();
+
+  console.log("data", data?.comments);
 
   if (isLoading) return <div>로딩중...</div>;
 
@@ -62,7 +64,7 @@ export const BoardDetailContainer = ({ id }: Props) => {
         </div>
       </div>
       <div className="h-[7vh]">
-        <CommentInput />
+        <CommentInput id={id} userObjectId={data.author._id} />
       </div>
     </div>
   );

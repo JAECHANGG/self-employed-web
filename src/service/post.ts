@@ -1,6 +1,10 @@
 import { Post } from "@/schemas/post";
 import { User } from "@/schemas/user";
-import { CreatePostPayload, UpdatePostPayload } from "@/types/post/payload";
+import {
+  CreateCommentPayload,
+  CreatePostPayload,
+  UpdatePostPayload,
+} from "@/types/post/payload";
 import dbConnect from "@/util/database";
 
 export async function createPost(payload: CreatePostPayload) {
@@ -44,7 +48,7 @@ export async function getPostsByCategory(category: string) {
 
   try {
     const result = await Post.find({ category }).populate("author");
-    console.log("result", result);
+    // console.log("result", result);
     return result.map((post) => ({
       id: post._id,
       createdAt: post.createdAt,
@@ -87,7 +91,29 @@ export async function updatePost(payload: UpdatePostPayload) {
     );
     return true;
   } catch (error) {
-    console.log("updateMe fail:", error);
+    console.log("updatePost fail:", error);
+    return false;
+  } finally {
+    // mongoose.connection.close();
+  }
+}
+
+export async function createComment(payload: CreateCommentPayload) {
+  await dbConnect();
+
+  console.log("payload123", payload);
+  try {
+    await Post.findOneAndUpdate(
+      { _id: payload.id },
+      {
+        $push: {
+          comments: { comment: payload.comment, author: payload.author },
+        },
+      }
+    );
+    return true;
+  } catch (error) {
+    console.log("createComment fail:", error);
     return false;
   } finally {
     // mongoose.connection.close();

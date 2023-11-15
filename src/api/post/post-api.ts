@@ -1,5 +1,9 @@
 import { PostByCategoryDto, PostByIdDto } from "@/types/post/dto";
-import { CreatePostPayload, UpdatePostPayload } from "@/types/post/payload";
+import {
+  CreateCommentPayload,
+  CreatePostPayload,
+  UpdatePostPayload,
+} from "@/types/post/payload";
 import { AxiosInstance } from "axios";
 import { baseApi } from "../base-api";
 
@@ -31,6 +35,10 @@ class PostApi {
 
   async update(payload: UpdatePostPayload): Promise<string> {
     return await this._api.patch(`${PostApiUrl.Update}`, payload);
+  }
+
+  async createComment(payload: CreateCommentPayload): Promise<string> {
+    return await this._api.patch(`${PostApiUrl.Update}/${payload.id}`, payload);
   }
 }
 
