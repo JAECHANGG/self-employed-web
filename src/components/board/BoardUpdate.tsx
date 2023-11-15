@@ -1,9 +1,9 @@
 "use client";
 
 import { useGetPostByIdQuery, useUpdatePostMutation } from "@/query/post-query";
-import { CreatePostPayload, UpdatePostPayload } from "@/types/post/payload";
+import { UpdatePostPayload } from "@/types/post/payload";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface Props {
   slug: string;

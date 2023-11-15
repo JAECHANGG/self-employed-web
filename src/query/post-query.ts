@@ -1,4 +1,5 @@
 import { postApi } from "@/api/post/post-api";
+import { queryClient } from "@/app/provider";
 import {
   CreateCommentPayload,
   CreatePostPayload,
@@ -55,6 +56,7 @@ export const useCreateCommentMutation = () => {
     mutationFn: (payload: CreateCommentPayload) =>
       postApi.createComment(payload),
     onSuccess: (response) => {
+      queryClient.invalidateQueries([PostQueryKey.GetPostsById]);
       console.log("create comment", response);
     },
   });

@@ -69,7 +69,9 @@ export async function getPostById(id: string) {
   await dbConnect();
 
   try {
-    return await Post.findOne({ _id: id }).populate("author");
+    return await Post.findOne({ _id: id })
+      .populate("author")
+      .populate("comments.author");
   } catch (error) {
     console.log("getPostById error", error);
     return [];
@@ -79,7 +81,7 @@ export async function getPostById(id: string) {
 export async function updatePost(payload: UpdatePostPayload) {
   await dbConnect();
 
-  console.log("payload", payload);
+  console.log("updatePost payload", payload);
   try {
     await Post.findOneAndUpdate(
       { _id: payload.id },
@@ -101,7 +103,7 @@ export async function updatePost(payload: UpdatePostPayload) {
 export async function createComment(payload: CreateCommentPayload) {
   await dbConnect();
 
-  console.log("payload123", payload);
+  console.log("createComment payload", payload);
   try {
     await Post.findOneAndUpdate(
       { _id: payload.id },

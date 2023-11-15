@@ -16,14 +16,14 @@ interface Props {
 }
 
 export const BoardDetailContainer = ({ id }: Props) => {
-  const { data, isLoading } = useGetPostByIdQuery(id);
+  const { data, isLoading, isFetching } = useGetPostByIdQuery(id);
   const { data: me } = useGetMeQuery();
 
   console.log("data", data?.comments);
 
-  if (isLoading) return <div>로딩중...</div>;
+  if (isLoading || isFetching) return <div>로딩중...</div>;
 
-  if (!data) {
+  if (!data || !me) {
     return <div>데이터가 없습니다...</div>;
   }
 
@@ -60,11 +60,11 @@ export const BoardDetailContainer = ({ id }: Props) => {
         </div>
         <div className="bg-gray-300 h-[1px] mt-5"></div>
         <div>
-          <Comment />
+          <Comment comments={data.comments} />
         </div>
       </div>
       <div className="h-[7vh]">
-        <CommentInput id={id} userObjectId={data.author._id} />
+        <CommentInput id={id} userObjectId={me._id} />
       </div>
     </div>
   );

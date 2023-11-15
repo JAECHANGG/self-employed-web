@@ -16,7 +16,6 @@ export async function GET(request: NextRequest, context: Context) {
 
 export async function PATCH(request: NextRequest) {
   const createCommentRequest: CreateCommentPayload = await request.json();
-  console.log("createCommentRequest", createCommentRequest);
 
   return createComment(createCommentRequest).then((data) =>
     data

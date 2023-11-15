@@ -23,3 +23,10 @@ export interface PostByCategoryDto {
   username: string;
   view: number;
 }
+
+export interface CommentDto {
+  author: AuthorDto;
+  comment: string;
+  like: number;
+  createdAt: string;
+}

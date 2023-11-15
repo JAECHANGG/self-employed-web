@@ -5,6 +5,5 @@ export interface AuthorDto {
   socialId: string;
   updatedAt: string;
   username: string;
-  __v: number;
   _id: string;
 }
