@@ -1,5 +1,5 @@
-import { PostByCategoryDto } from "@/types/post/dto";
-import { CreatePostPayload } from "@/types/post/payload";
+import { PostByCategoryDto, PostByIdDto } from "@/types/post/dto";
+import { CreatePostPayload, UpdatePostPayload } from "@/types/post/payload";
 import { AxiosInstance } from "axios";
 import { baseApi } from "../base-api";
 
@@ -7,6 +7,7 @@ enum PostApiUrl {
   GetPostById = "/post",
   GetPostsByCategory = "/post/category",
   Create = "/post",
+  Update = "/post",
 }
 
 class PostApi {
@@ -16,7 +17,7 @@ class PostApi {
     this._api = api;
   }
 
-  async getPostById(id: string): Promise<PostByCategoryDto> {
+  async getPostById(id: string): Promise<PostByIdDto> {
     return await this._api.get(`${PostApiUrl.GetPostById}/${id}`);
   }
 
@@ -26,6 +27,10 @@ class PostApi {
 
   async create(payload: CreatePostPayload): Promise<string> {
     return await this._api.post(`${PostApiUrl.Create}`, payload);
+  }
+
+  async update(payload: UpdatePostPayload): Promise<string> {
+    return await this._api.patch(`${PostApiUrl.Update}`, payload);
   }
 }
 

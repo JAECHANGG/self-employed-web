@@ -14,7 +14,7 @@ export default function NotificationsPage() {
         </div>
         <div className="w-11/12 flex flex-col items-start">
           <span className="text-sm">
-            '개발하는 사람들'에 읽지 않은 새 메시지가 있습니다. 일주일 동안 어떤
+            개발하는 사람들에 읽지 않은 새 메시지가 있습니다. 일주일 동안 어떤
             대화가 오갔는지 확인해 보세요.
           </span>
           <span className="text-xs opacity-70">10개월 전</span>
@@ -31,8 +31,8 @@ export default function NotificationsPage() {
         </div>
         <div className="w-11/12 flex flex-col items-start">
           <span className="text-sm">
-            '개발하는 사람들'에 읽지 않은 새 메시지가 있습니다. 일주일 동안 어떤
-            대화가 오갔는지 확인해 보세요.'개발하는 사람들'에 읽지 않은 새
+            개발하는 사람들에 읽지 않은 새 메시지가 있습니다. 일주일 동안 어떤
+            대화가 오갔는지 확인해 보세요.개발하는 사람들에 읽지 않은 새
             메시지가 있습니다. 일주일 동안 어떤 대화가 오갔는지 확인해 보세요.
           </span>
           <span className="text-xs opacity-70">10개월 전</span>
@@ -49,7 +49,7 @@ export default function NotificationsPage() {
         </div>
         <div className="w-11/12 flex flex-col items-start">
           <span className="text-sm">
-            '개발하는 사람들'에 읽지 않은 새 메시지가 있습니다. 일주일 동안 어떤
+            개발하는 사람들에 읽지 않은 새 메시지가 있습니다. 일주일 동안 어떤
             대화가 오갔는지 확인해 보세요.
           </span>
           <span className="text-xs opacity-70">10개월 전</span>

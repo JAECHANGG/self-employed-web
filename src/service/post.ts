@@ -1,6 +1,6 @@
 import { Post } from "@/schemas/post";
 import { User } from "@/schemas/user";
-import { CreatePostPayload } from "@/types/post/payload";
+import { CreatePostPayload, UpdatePostPayload } from "@/types/post/payload";
 import dbConnect from "@/util/database";
 
 export async function createPost(payload: CreatePostPayload) {
@@ -69,5 +69,27 @@ export async function getPostById(id: string) {
   } catch (error) {
     console.log("getPostById error", error);
     return [];
+  }
+}
+
+export async function updatePost(payload: UpdatePostPayload) {
+  await dbConnect();
+
+  console.log("payload", payload);
+  try {
+    await Post.findOneAndUpdate(
+      { _id: payload.id },
+      {
+        title: payload.title,
+        category: payload.category,
+        content: payload.content,
+      }
+    );
+    return true;
+  } catch (error) {
+    console.log("updateMe fail:", error);
+    return false;
+  } finally {
+    // mongoose.connection.close();
   }
 }

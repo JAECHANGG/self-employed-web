@@ -4,3 +4,10 @@ export interface CreatePostPayload {
   content: string;
   author: string;
 }
+
+export interface UpdatePostPayload {
+  title: string;
+  category: string;
+  content: string;
+  id: string;
+}

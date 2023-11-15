@@ -10,6 +10,5 @@ interface Context {
 export async function GET(request: NextRequest, context: Context) {
   console.log("req", request);
   const { slug: id } = context.params;
-  console.log("id", id);
   return getPostById(id).then((data) => NextResponse.json(data));
 }

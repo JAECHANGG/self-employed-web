@@ -1,6 +1,7 @@
 import { UpdateMePayload } from "@/types/me/payload";
 import { AxiosInstance } from "axios";
 import { baseApi } from "../base-api";
+import { AuthorDto } from "@/types/author/dto";
 
 enum MeApiUrl {
   Get = "/me",
@@ -14,7 +15,7 @@ class MeApi {
     this._api = api;
   }
 
-  async get(): Promise<any> {
+  async get(): Promise<AuthorDto> {
     return await this._api.get(`${MeApiUrl.Get}`);
   }
 

@@ -11,5 +11,5 @@ export default async function FreeBoardDetailPage({
   console.log(id);
   const response = await postApi.getPostById(id);
   console.log(response);
-  return <BoardDetailContainer />;
+  return <BoardDetailContainer id={id} />;
 }

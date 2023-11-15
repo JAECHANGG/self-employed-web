@@ -4,7 +4,8 @@ interface Props {
   params: { slug: string };
 }
 
-export default function KnowhowBoardDetailPage({ params: { slug } }: Props) {
-  console.log(slug);
-  return <BoardDetailContainer />;
+export default function KnowhowBoardDetailPage({
+  params: { slug: id },
+}: Props) {
+  return <BoardDetailContainer id={id} />;
 }
