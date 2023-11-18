@@ -1,18 +1,13 @@
 "use client";
 
-import { queryClient } from "@/app/provider";
 import Modal from "@/components/Modal";
 import ModalPortal from "@/components/ModalPortal";
-import {
-  MeQueryKey,
-  useGetMeQuery,
-  useUpdateMeMutation,
-} from "@/query/me-query";
+import { useGetUserQuery, useUpdateUserMutation } from "@/query/user-query";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 export default function DetailPage() {
-  const { data, isLoading } = useGetMeQuery();
-  const updateMeMutation = useUpdateMeMutation();
+  const { data, isLoading } = useGetUserQuery();
+  const updateUserMutation = useUpdateUserMutation();
 
   const [error, setError] = useState<string>();
   const [openModal, setOpenModal] = useState(false);
@@ -39,7 +34,7 @@ export default function DetailPage() {
 
   const onSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    updateMeMutation.mutate(
+    updateUserMutation.mutate(
       { username },
       {
         onError: (error) => {
@@ -69,7 +64,7 @@ export default function DetailPage() {
 
   useEffect(() => {
     if (!username) {
-      setUsername(data?.username);
+      setUsername(data?.username || "");
     }
     // if (!uploadedImage) {
     //   setImageSrc(data?.image);

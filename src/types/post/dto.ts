@@ -1,15 +1,15 @@
-import { AuthorDto } from "../author/dto";
+import { UserDto } from "../user/dto";
 
 export interface PostByIdDto {
-  comments: [];
+  comments: CommentDto[];
   content: string;
   createdAt: string;
   updatedAt: string;
   category: string;
-  _id: string;
-  like: number;
+  id: string;
+  like: UserDto[];
   title: string;
-  author: AuthorDto;
+  user: UserDto;
   view: number;
 }
 
@@ -18,15 +18,16 @@ export interface PostByCategoryDto {
   content: string;
   createdAt: string;
   id: string;
-  like: number;
+  likeNumber: number;
   title: string;
   username: string;
   view: number;
 }
 
 export interface CommentDto {
-  author: AuthorDto;
+  id: string;
+  user: UserDto;
   comment: string;
-  like: number;
+  like: UserDto[];
   createdAt: string;
 }

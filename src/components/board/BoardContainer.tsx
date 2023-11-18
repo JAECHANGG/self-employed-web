@@ -46,7 +46,7 @@ export const BoardContainer = () => {
                   <span>{HHmmTime(data.createdAt)}</span>
                   <span className="text-red-500 ml-2 flex items-center">
                     <FavoriteBorderIcon style={{ height: 15 }} />
-                    {data.like}
+                    {data.likeNumber}
                   </span>
                   <span className="text-blue-500 ml-2 flex items-center">
                     <ChatBubbleOutlineIcon

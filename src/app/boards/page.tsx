@@ -13,7 +13,7 @@ interface boardComponent {
   icon: React.ReactNode;
 }
 
-export const boardTitleMap: { [key: string]: boardComponent } = {
+const boardTitleMap: { [key: string]: boardComponent } = {
   인기게시판: { id: "bestboard", icon: <ThumbUpAltIcon /> },
   자유게시판: { id: "freeboard", icon: <ArticleIcon /> },
   노하우게시판: { id: "knowhowboard", icon: <SchoolIcon /> },

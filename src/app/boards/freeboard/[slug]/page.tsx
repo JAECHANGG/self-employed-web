@@ -1,4 +1,3 @@
-import { postApi } from "@/api/post/post-api";
 import { BoardDetailContainer } from "@/components/board-detail/BoardDetailContainer";
 
 interface Props {
@@ -8,8 +7,5 @@ interface Props {
 export default async function FreeBoardDetailPage({
   params: { slug: id },
 }: Props) {
-  console.log(id);
-  const response = await postApi.getPostById(id);
-  console.log(response);
   return <BoardDetailContainer id={id} />;
 }

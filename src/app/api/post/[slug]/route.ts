@@ -1,5 +1,4 @@
-import { createComment, getPostById } from "@/service/post";
-import { CreateCommentPayload } from "@/types/post/payload";
+import { deletePost, getPostById } from "@/service/post";
 import { NextRequest, NextResponse } from "next/server";
 
 interface Context {
@@ -9,15 +8,14 @@ interface Context {
 }
 
 export async function GET(request: NextRequest, context: Context) {
-  // console.log("req", request);
   const { slug: id } = context.params;
   return getPostById(id).then((data) => NextResponse.json(data));
 }
 
-export async function PATCH(request: NextRequest) {
-  const createCommentRequest: CreateCommentPayload = await request.json();
+export async function DELETE(request: NextRequest, context: Context) {
+  const { slug: id } = context.params;
 
-  return createComment(createCommentRequest).then((data) =>
+  return deletePost(id).then((data) =>
     data
       ? new Response("Good Response", { status: 200 })
       : new Response("Bad Response", { status: 500 })

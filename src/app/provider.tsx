@@ -13,6 +13,7 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 60 * 5 * 1000,
+      refetchOnWindowFocus: false,
       // enabled : false 값이면 자동 호출하지 않고 사용하는 곳마다 true로 설정해줘야 한다.
 
       // retry : 서버 통신 실패시 재시도 횟수, 0으로 하면 유저에게 빠른 응답을 보여줄 수 있음

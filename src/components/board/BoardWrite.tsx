@@ -12,7 +12,7 @@ export const BoardWrite = () => {
     title: "",
     category: "",
     content: "",
-    author: "",
+    user: "",
   };
   const [payload, setPayload] = useState<CreatePostPayload>(initPayload);
   const createPostMutation = useCreatePostMutation();
@@ -30,7 +30,7 @@ export const BoardWrite = () => {
 
   useEffect(() => {
     if (status === "authenticated") {
-      setPayload({ ...payload, author: session.user.id });
+      setPayload({ ...payload, user: session.user.id });
     }
   }, [status]);
 

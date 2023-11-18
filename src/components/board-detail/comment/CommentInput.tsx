@@ -20,7 +20,7 @@ export const CommentInput = ({ id, userObjectId }: Props) => {
   const handleClickCreateComment = () => {
     const payload = {
       comment: commentValue,
-      author: userObjectId,
+      user: userObjectId,
       id,
     };
     createCommentMutation.mutate(payload);

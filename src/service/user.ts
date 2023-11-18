@@ -1,12 +1,24 @@
 import { User } from "@/schemas/user";
+import { OAuthUser } from "@/types/user/oauth-user";
 import dbConnect from "@/util/database";
 
-interface OAuthUser {
-  id: string;
-  email: string;
-  name: string;
-  username: string;
-  image?: string | null;
+export async function updateUser(userId: string, username: string) {
+  await dbConnect();
+
+  try {
+    await User.findOneAndUpdate(
+      {
+        socialId: userId,
+      },
+      {
+        username,
+      }
+    );
+    return true;
+  } catch (error) {
+    console.log("updateUser fail:", error);
+    return false;
+  }
 }
 
 export async function addUser({ id, email, name, username, image }: OAuthUser) {
@@ -22,8 +34,6 @@ export async function addUser({ id, email, name, username, image }: OAuthUser) {
   } catch (error) {
     console.log("탐색 중 에러 error", error);
     return false;
-  } finally {
-    // mongoose.connection.close();
   }
 }
 
@@ -31,13 +41,10 @@ export async function getUserById(socialId: string) {
   await dbConnect();
 
   try {
-    const result = await User.findOne({ socialId });
-    return result;
+    return await User.findOne({ socialId });
   } catch (error) {
     console.log("user 정보를 찾을 수 없습니다.", error);
     return false;
-  } finally {
-    // mongoose.connection.close();
   }
 }
 
@@ -57,7 +64,5 @@ async function createUser({ id, email, name, username, image }: OAuthUser) {
   } catch (error) {
     console.error("사용자 생성 중 오류 발생:", error);
     return false;
-  } finally {
-    // mongoose.connection.close();
   }
 }
