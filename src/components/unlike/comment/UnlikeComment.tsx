@@ -2,18 +2,19 @@
 
 import { useUnlikeCommentMutation } from "@/query/post-query";
 import { Unlike } from "../Unlike";
+import { UserDto } from "@/types/user/dto";
 
 interface Props {
   postId: string;
   commentId: string;
-  userId: string;
+  user: UserDto;
   likeNumber: number;
 }
 
 export const UnlikeComment = ({
   postId,
   commentId,
-  userId,
+  user,
   likeNumber,
 }: Props) => {
   const unlikeCommentMutation = useUnlikeCommentMutation();
@@ -22,7 +23,7 @@ export const UnlikeComment = ({
     unlikeCommentMutation.mutate({
       postId,
       commentId,
-      userId,
+      user,
     });
   };
 

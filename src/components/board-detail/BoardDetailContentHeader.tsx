@@ -5,6 +5,8 @@ import { PostByIdDto } from "@/types/post/dto";
 import { MMDDHHmmTime } from "@/util/time-util";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import CustomTextButton from "../CustomTextButton";
+import { Spinner } from "../Spinner";
 
 interface Props {
   data: PostByIdDto;
@@ -19,15 +21,16 @@ export const BoardDetailContentHeader = ({ data, me }: Props) => {
   const handleClickDeletePost = (id: string) => {
     deletePostMutation.mutate(id, {
       onSuccess: () => {
-        router.push(`/boards/${category}`);
+        router.replace(`/boards/${category}`);
       },
     });
   };
 
   return (
     <section className="flex items-center justify-between">
+      {deletePostMutation.isLoading && <Spinner />}
       <div className="flex flex-row">
-        <div className="mr-6">
+        <header className="mr-6">
           <div className="w-12 h-12">
             <img
               src={user.image}
@@ -35,24 +38,27 @@ export const BoardDetailContentHeader = ({ data, me }: Props) => {
               className="rounded-full"
             />
           </div>
-        </div>
-        <div className="flex flex-col">
+        </header>
+        <main className="flex flex-col">
           <div className="font-bold">{user.username}</div>
           <div className="text-sm mt-1 opacity-70">
             {MMDDHHmmTime(createdAt)}
           </div>
-        </div>
+        </main>
       </div>
-      {user.id === me && (
-        <Link href={`/boards/update/${category}/${id}`} className="">
-          수정하기
-        </Link>
-      )}
-      {user.id === me && (
-        <button onClick={() => handleClickDeletePost(id)} className="">
-          삭제하기
-        </button>
-      )}
+      <footer>
+        {user.id === me && (
+          <Link href={`/boards/update/${category}/${id}`}>
+            <CustomTextButton onClick={() => {}} title="수정" />
+          </Link>
+        )}
+        {user.id === me && (
+          <CustomTextButton
+            onClick={() => handleClickDeletePost(id)}
+            title="삭제"
+          />
+        )}
+      </footer>
     </section>
   );
 };

@@ -1,40 +1,56 @@
 "use client";
 
 import { queryClient } from "@/app/provider";
-import { PostQueryKey, useGetPostsByCategoryQuery } from "@/query/post-query";
+import {
+  PostQueryKey,
+  useGetAllPostsQuery,
+  useGetPostsByCategoryQuery,
+} from "@/query/post-query";
 import { HHmmTime } from "@/util/time-util";
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { Spinner } from "../Spinner";
 
 export const BoardContainer = () => {
   // const headersList = headers();
   // const pathname = headersList.get("x-invoke-path");
   const pathname = usePathname();
+  const home = pathname?.split("/")[1];
   const category = pathname?.split("/")[2];
-  const { data: postsByCategory, isFetching } = useGetPostsByCategoryQuery(
-    category || ""
-  );
+  const useGetPosts =
+    category === "allboard" || home === "home"
+      ? useGetAllPostsQuery
+      : useGetPostsByCategoryQuery;
+
+  const { data: postsByCategory, isFetching } = useGetPosts(category || "");
 
   useEffect(() => {
     return () => {
-      queryClient.invalidateQueries([PostQueryKey.GetPostsByCategory]);
+      queryClient.invalidateQueries([
+        PostQueryKey.GetPostsByCategory,
+        category,
+      ]);
+      queryClient.invalidateQueries([PostQueryKey.GetAllPosts]);
     };
   }, []);
 
-  if (isFetching) return <div>로딩중</div>;
-
   return (
     <>
-      <article className="h-full overflow-x-hidden overflow-y-auto p-4">
-        <Link href={`/boards/write/${category}`}>글쓰기 버튼</Link>
+      <article className="overflow-x-hidden overflow-y-auto">
+        {isFetching && <Spinner />}
+        {category !== "bestboard" &&
+          category !== "allboard" &&
+          home !== "home" && (
+            <Link href={`/boards/write/${category}`}>글쓰기 버튼</Link>
+          )}
         {postsByCategory?.map((data) => {
           return (
-            <Link href={`${pathname}/${data.id}`} key={data.id}>
-              <div className="border border-blue-200 rounded-lg mb-5 p-4 cursor-pointer">
+            <Link href={`/boards/${data.category}/${data.id}`} key={data.id}>
+              <div className="bg-white border border-myColor-white-gray p-4 cursor-pointer">
                 <h1 className="text-xl font-bold truncate mb-3">
                   {data.title}
                 </h1>
@@ -49,7 +65,7 @@ export const BoardContainer = () => {
                     {data.likeNumber}
                   </span>
                   <span className="text-blue-500 ml-2 flex items-center">
-                    <ChatBubbleOutlineIcon
+                    <ModeCommentOutlinedIcon
                       style={{ height: 14, paddingTop: 2 }}
                     />
                     {data.commentNumber}

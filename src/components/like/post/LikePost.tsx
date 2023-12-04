@@ -2,20 +2,21 @@
 
 import { useLikePostMutation } from "@/query/post-query";
 import { Like } from "../Like";
+import { UserDto } from "@/types/user/dto";
 
 interface Props {
   postId: string;
-  userId: string;
+  user: UserDto;
   likeNumber: number;
 }
 
-export const LikePost = ({ postId, userId, likeNumber }: Props) => {
+export const LikePost = ({ postId, user, likeNumber }: Props) => {
   const likePostMutation = useLikePostMutation();
 
   const handleClickLikeButton = () => {
     likePostMutation.mutate({
       postId,
-      userId,
+      user,
     });
   };
 

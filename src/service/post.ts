@@ -1,13 +1,18 @@
+import { DELETE_COMMENT } from "@/app/constants";
 import { Post } from "@/schemas/post";
 import { User } from "@/schemas/user";
 import {
   CreateCommentPayload,
   CreatePostPayload,
+  CreateReplyPayload,
   DeleteCommentPayload,
+  DeleteReplyPayload,
   IncreaseViewPayload,
   LikeCommentPayload,
   LikePostPayload,
+  LikeReplyPayload,
   UnlikeCommentPayload,
+  UnlikeReplyPayload,
   UpdatePostPayload,
 } from "@/types/post/payload";
 import dbConnect from "@/util/database";
@@ -16,16 +21,15 @@ export async function createPost(payload: CreatePostPayload) {
   await dbConnect();
 
   try {
-    const existingUser = await User.findOne({ socialId: payload.user });
+    const { socialId } = payload;
+    const existingUser = await User.findOne({ socialId });
     if (!existingUser) {
-      console.log("존재하지 않는 유저입니다.");
-      return false;
+      throw new Error("존재하지 않는 유저입니다.");
     }
 
-    return savePost(existingUser._id, payload);
+    return savePost(existingUser.id, payload);
   } catch (error) {
-    console.log("user 탐색 중 오류.", error);
-    return false;
+    throw error;
   }
 }
 
@@ -41,20 +45,27 @@ async function savePost(userObjectId: string, payload: CreatePostPayload) {
   });
 
   try {
-    await post.save();
-    console.log("새로운 포스트가 생성되었습니다");
-    return true;
+    const { id } = await post.save();
+    return {
+      id,
+    };
   } catch (error) {
-    console.error("포스트 생성 중 오류 발생:", error);
-    return false;
+    throw error;
   }
 }
 
-export async function getPostsByCategory(category: string) {
+export async function getAllPosts() {
   await dbConnect();
 
   try {
-    const result = await Post.find({ category }).populate("user");
+    const result = await Post.find({})
+      .sort({ createdAt: -1 })
+      .populate("user")
+      .populate("like")
+      .populate("comments.user")
+      .populate("comments.like")
+      .populate("comments.replies.user")
+      .populate("comments.replies.like");
 
     return result.map((post) => ({
       id: post._id,
@@ -65,10 +76,39 @@ export async function getPostsByCategory(category: string) {
       likeNumber: post.like.length,
       commentNumber: post.comments.length,
       view: post.view,
+      category: post.category,
     }));
   } catch (error) {
-    console.log("getPostsByCategory error", error);
-    return [];
+    throw error;
+  }
+}
+
+export async function getPostsByCategory(category: string) {
+  await dbConnect();
+
+  try {
+    const result = await Post.find({ category })
+      .sort({ createdAt: -1 })
+      .populate("user")
+      .populate("like")
+      .populate("comments.user")
+      .populate("comments.like")
+      .populate("comments.replies.user")
+      .populate("comments.replies.like");
+
+    return result.map((post) => ({
+      id: post._id,
+      createdAt: post.createdAt,
+      title: post.title,
+      content: post.content,
+      username: post.user.username,
+      likeNumber: post.like.length,
+      commentNumber: post.comments.length,
+      view: post.view,
+      category: post.category,
+    }));
+  } catch (error) {
+    throw error;
   }
 }
 
@@ -80,7 +120,9 @@ export async function getPostById(id: string) {
       .populate("user")
       .populate("like")
       .populate("comments.user")
-      .populate("comments.like");
+      .populate("comments.like")
+      .populate("comments.replies.user")
+      .populate("comments.replies.like");
   } catch (error) {
     console.log("getPostById error", error);
     return [];
@@ -100,10 +142,11 @@ export async function updatePost(payload: UpdatePostPayload) {
         content,
       }
     );
-    return true;
+    return {
+      id,
+    };
   } catch (error) {
-    console.log("updatePost fail:", error);
-    return false;
+    throw error;
   }
 }
 
@@ -112,61 +155,53 @@ export async function deletePost(id: string) {
 
   try {
     await Post.findOneAndDelete({ _id: id });
-    return true;
+    return null;
   } catch (error) {
-    console.log("deletePost fail:", error);
-  } finally {
+    throw error;
   }
 }
 
 export async function createComment(payload: CreateCommentPayload) {
-  const { id, comment, user } = payload;
+  const { postId, comment, userId } = payload;
   await dbConnect();
 
-  console.log("createComment payload", payload);
   try {
     await Post.findOneAndUpdate(
-      { _id: id },
+      { _id: postId },
       {
         $push: {
-          comments: { comment, user },
+          comments: { comment, user: userId },
         },
       }
     );
-    return true;
+    return { id: postId };
   } catch (error) {
-    console.log("createComment fail:", error);
-    return false;
-  } finally {
-    // mongoose.connection.close();
+    throw error;
   }
 }
 
 export async function deleteComment(payload: DeleteCommentPayload) {
   const { postId, commentId } = payload;
-
   await dbConnect();
 
-  console.log("deleteComment", commentId);
   try {
-    await Post.findOneAndUpdate(
-      {
-        _id: postId,
-      },
-      {
-        $pull: {
-          comments: { _id: commentId },
-        },
-      }
-    );
-    return true;
+    const post = await Post.findOne({ _id: postId });
+    if (!post) {
+      throw new Error("Post or comment not found");
+    }
+
+    const comment = post.comments.id(commentId);
+    comment.comment = DELETE_COMMENT;
+
+    await post.save();
+    return { id: postId };
   } catch (error) {
-    console.log("commentDelete fail:", error);
+    throw error;
   }
 }
 
 export async function likePost(payload: LikePostPayload) {
-  const { postId, userId } = payload;
+  const { postId, user } = payload;
   await dbConnect();
 
   try {
@@ -174,19 +209,18 @@ export async function likePost(payload: LikePostPayload) {
       { _id: postId },
       {
         $push: {
-          like: userId,
+          like: user.id,
         },
       }
     );
-    return true;
+    return { id: postId };
   } catch (error) {
-    console.log("likePost fail:", error);
-    return false;
+    throw error;
   }
 }
 
 export async function unlikePost(payload: LikePostPayload) {
-  const { postId, userId } = payload;
+  const { postId, user } = payload;
   await dbConnect();
 
   try {
@@ -194,19 +228,18 @@ export async function unlikePost(payload: LikePostPayload) {
       { _id: postId },
       {
         $pull: {
-          like: userId,
+          like: user.id,
         },
       }
     );
-    return true;
+    return { id: postId };
   } catch (error) {
-    console.log("unlikePost fail:", error);
-    return false;
+    throw error;
   }
 }
 
 export async function likeComment(payload: LikeCommentPayload) {
-  const { postId, commentId, userId } = payload;
+  const { postId, commentId, user } = payload;
   await dbConnect();
 
   try {
@@ -214,19 +247,18 @@ export async function likeComment(payload: LikeCommentPayload) {
       { _id: postId, "comments._id": commentId },
       {
         $push: {
-          "comments.$.like": userId,
+          "comments.$.like": user.id,
         },
       }
     );
-    return true;
+    return { id: postId };
   } catch (error) {
-    console.log("likeComment fail:", error);
-    return false;
+    throw error;
   }
 }
 
 export async function unlikeComment(payload: UnlikeCommentPayload) {
-  const { postId, commentId, userId } = payload;
+  const { postId, commentId, user } = payload;
   await dbConnect();
 
   try {
@@ -234,14 +266,13 @@ export async function unlikeComment(payload: UnlikeCommentPayload) {
       { _id: postId, "comments._id": commentId },
       {
         $pull: {
-          "comments.$.like": userId,
+          "comments.$.like": user.id,
         },
       }
     );
-    return true;
+    return { id: postId };
   } catch (error) {
-    console.log("unlikeComment fail:", error);
-    return false;
+    throw error;
   }
 }
 
@@ -257,9 +288,109 @@ export async function increaseView(payload: IncreaseViewPayload) {
         },
       }
     );
-    return true;
+    return { id: payload.postId };
   } catch (error) {
-    console.error("increaseViewCount fail:", error);
-    return false;
+    throw error;
+  }
+}
+
+export async function createReply(payload: CreateReplyPayload) {
+  const { postId, commentId, reply, userId } = payload;
+  await dbConnect();
+
+  try {
+    await Post.findOneAndUpdate(
+      { _id: postId, "comments._id": commentId },
+      {
+        $push: {
+          "comments.$.replies": { reply, user: userId, like: [] },
+        },
+      }
+    );
+    return { id: postId };
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function deleteReply(payload: DeleteReplyPayload) {
+  const { postId, commentId, replyId } = payload;
+  await dbConnect();
+
+  try {
+    const post = await Post.findOne({ _id: postId });
+    if (!post) {
+      throw new Error("Post or comment not found");
+    }
+
+    const comment = post.comments.id(commentId);
+    const reply = comment.replies.id(replyId);
+    if (!reply) {
+      throw new Error("Reply not found");
+    }
+
+    reply.reply = DELETE_COMMENT;
+    await post.save();
+    return { id: postId };
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function likeReply(payload: LikeReplyPayload) {
+  const { postId, commentId, replyId, user } = payload;
+  await dbConnect();
+
+  try {
+    const post = await Post.findOne({ _id: postId });
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    const comment = post.comments.id(commentId);
+    if (!comment) {
+      throw new Error("Comment not found");
+    }
+
+    const reply = comment.replies.id(replyId);
+    if (!reply) {
+      throw new Error("Reply not found");
+    }
+
+    reply.like.push(user.id);
+    await post.save();
+
+    return { id: postId };
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function unlikeReply(payload: UnlikeReplyPayload) {
+  const { postId, commentId, replyId, user } = payload;
+  await dbConnect();
+
+  try {
+    const post = await Post.findOne({ _id: postId });
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    const comment = post.comments.id(commentId);
+    if (!comment) {
+      throw new Error("Comment not found");
+    }
+
+    const reply = comment.replies.id(replyId);
+    if (!reply) {
+      throw new Error("Reply not found");
+    }
+
+    reply.like.pull(user.id);
+    await post.save();
+
+    return { id: postId };
+  } catch (error) {
+    throw error;
   }
 }

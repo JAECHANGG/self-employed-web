@@ -1,4 +1,6 @@
 import { User } from "@/schemas/user";
+import { PostByIdDto } from "@/types/post/dto";
+import { AddCollectionPayload } from "@/types/user/dto";
 import { OAuthUser } from "@/types/user/oauth-user";
 import dbConnect from "@/util/database";
 
@@ -41,7 +43,28 @@ export async function getUserById(socialId: string) {
   await dbConnect();
 
   try {
-    return await User.findOne({ socialId });
+    const result = await User.findOne({ socialId }).populate({
+      path: "collections",
+      populate: {
+        path: "user",
+        model: "User",
+        select: "username",
+        strictPopulate: false,
+      },
+    });
+
+    const collections = result.collections.map((post: PostByIdDto) => ({
+      id: post.id,
+      createdAt: post.createdAt,
+      title: post.title,
+      content: post.content,
+      username: post.user.username,
+      likeNumber: post.like.length,
+      commentNumber: post.comments.length,
+      view: post.view,
+    }));
+
+    return { ...result._doc, collections, id: result._id };
   } catch (error) {
     console.log("user 정보를 찾을 수 없습니다.", error);
     return false;
@@ -64,5 +87,43 @@ async function createUser({ id, email, name, username, image }: OAuthUser) {
   } catch (error) {
     console.error("사용자 생성 중 오류 발생:", error);
     return false;
+  }
+}
+
+export async function addCollection(payload: AddCollectionPayload) {
+  const { postId, userId } = payload;
+  await dbConnect();
+
+  try {
+    await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $push: {
+          collections: postId,
+        },
+      }
+    );
+    return null;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function deleteCollection(payload: AddCollectionPayload) {
+  const { postId, userId } = payload;
+  await dbConnect();
+
+  try {
+    await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $pull: {
+          collections: postId,
+        },
+      }
+    );
+    return null;
+  } catch (error) {
+    throw error;
   }
 }

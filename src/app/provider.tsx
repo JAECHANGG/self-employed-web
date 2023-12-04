@@ -40,6 +40,7 @@ export function Provider({ children }: Props) {
       <RecoilRoot>
         <div className="app-wrap">{children}</div>
       </RecoilRoot>
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   );
 }

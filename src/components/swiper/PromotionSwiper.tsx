@@ -37,13 +37,13 @@ export const PromotionSwiper = () => {
         modules={[Autoplay]}
       >
         <SwiperSlide>
-          <section className="flex justify-between items-center bg-red-500 rounded-lg p-4">
+          <section className="flex justify-between items-center bg-red-500 p-4">
             <div className="flex flex-col">
               <span className="text-xl font-semibold mb-2 text-white">
-                모던 자바스크립트 딥다이브
+                [서울 강서구] 교동짬뽕
               </span>
               <span className="text-lg text-white">
-                일본어 문법 무작정 따라하기
+                {'"성시경의 먹을텐데" 출연한 맛집'}
               </span>
             </div>
             <div className="flex items-center justify-center">
@@ -52,13 +52,13 @@ export const PromotionSwiper = () => {
           </section>
         </SwiperSlide>
         <SwiperSlide>
-          <section className="flex justify-between items-center bg-red-500 rounded-lg p-4">
+          <section className="flex justify-between items-center bg-red-500 p-4">
             <div className="flex flex-col">
               <span className="text-xl font-semibold mb-2 text-white">
-                모던 자바스크립트 딥다이브
+                [서울 성수구] 이모네 감자탕
               </span>
               <span className="text-lg text-white">
-                일본어 문법 무작정 따라하기
+                서울에서 가장 맛있는 감자탕
               </span>
             </div>
             <div className="flex items-center justify-center">

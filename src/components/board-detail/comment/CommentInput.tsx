@@ -1,16 +1,27 @@
 "use client";
 
-import { useCreateCommentMutation } from "@/query/post-query";
+import {
+  useCreateCommentMutation,
+  useCreateReplyMutation,
+} from "@/query/post-query";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 interface Props {
   id: string;
   userObjectId: string;
+  selectedCommentId: string;
+  setSelectedCommentId: Dispatch<SetStateAction<string>>;
 }
 
-export const CommentInput = ({ id, userObjectId }: Props) => {
+export const CommentInput = ({
+  id,
+  userObjectId,
+  selectedCommentId,
+  setSelectedCommentId,
+}: Props) => {
   const createCommentMutation = useCreateCommentMutation();
+  const createReplyMutation = useCreateReplyMutation();
   const [commentValue, setCommentValue] = useState("");
 
   const handleChangeComment = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,15 +31,28 @@ export const CommentInput = ({ id, userObjectId }: Props) => {
   const handleClickCreateComment = () => {
     const payload = {
       comment: commentValue,
-      user: userObjectId,
-      id,
+      userId: userObjectId,
+      postId: id,
     };
     createCommentMutation.mutate(payload);
-    console.log("생성");
+  };
+
+  const handleClickReplyComment = () => {
+    const payload = {
+      commentId: selectedCommentId,
+      reply: commentValue,
+      userId: userObjectId,
+      postId: id,
+    };
+    createReplyMutation.mutate(payload, {
+      onSuccess: () => {
+        setSelectedCommentId("");
+      },
+    });
   };
 
   return (
-    <div className="flex items-center">
+    <section className="w-full bg-gray-100 flex items-center absolute bottom-0">
       <input
         className="w-full py-2 px-4 bg-gray-100 mr-2 rounded-lg"
         type="text"
@@ -37,10 +61,12 @@ export const CommentInput = ({ id, userObjectId }: Props) => {
       />
       <div
         className="flex items-center justify-center"
-        onClick={handleClickCreateComment}
+        onClick={
+          selectedCommentId ? handleClickReplyComment : handleClickCreateComment
+        }
       >
         <SendOutlinedIcon style={{ height: 30 }} />
       </div>
-    </div>
+    </section>
   );
 };

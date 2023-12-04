@@ -14,8 +14,13 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        "kakao-yellow": "#FEEB00",
-        "naver-green": "#27D34B",
+        myColor: {
+          "kakao-yellow": "#FEEB00",
+          "naver-green": "#27D34B",
+          "white-gray": "#F3F5F7",
+          gray: "#e3e3e3",
+          "deep-blue": "#013281",
+        },
       },
     },
   },

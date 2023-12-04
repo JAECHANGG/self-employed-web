@@ -1,31 +1,40 @@
-import { PostByCategoryDto, PostByIdDto } from "@/types/post/dto";
+import { PostByCategoryDto, PostByIdDto, PostIdDto } from "@/types/post/dto";
 import {
   CreateCommentPayload,
   CreatePostPayload,
+  CreateReplyPayload,
   DeleteCommentPayload,
+  DeleteReplyPayload,
   IncreaseViewPayload,
   LikeCommentPayload,
   LikePostPayload,
+  LikeReplyPayload,
   UnlikeCommentPayload,
   UnlikePostPayload,
+  UnlikeReplyPayload,
   UpdatePostPayload,
 } from "@/types/post/payload";
 import { AxiosInstance } from "axios";
 import { baseApi } from "../base-api";
 
 enum PostApiUrl {
+  GetAllPosts = "/post",
   GetPostById = "/post",
   GetPostsByCategory = "/post/category",
   Create = "/post",
   Update = "/post",
   Delete = "/post",
-  CreateComment = "/post/comment/write",
-  DeleteComment = "/post/comment/remove",
+  CreateComment = "/post/comment",
+  DeleteComment = "/post/comment",
   LikePost = "/post/like/post",
   UnlikePost = "/post/unlike/post",
   LikeComment = "/post/like/comment",
   UnlikeComment = "/post/unlike/comment",
   IncreaseView = "/post/view",
+  CreateReply = "/post/reply",
+  DeleteReply = "/post/reply",
+  LikeReply = "/post/like/reply",
+  UnlikeReply = "/post/unlike/reply",
 }
 
 class PostApi {
@@ -33,6 +42,10 @@ class PostApi {
 
   constructor(api: AxiosInstance) {
     this._api = api;
+  }
+
+  async getAllPosts(): Promise<PostByCategoryDto[]> {
+    return await this._api.get(`${PostApiUrl.GetAllPosts}`);
   }
 
   async getPostById(id: string): Promise<PostByIdDto> {
@@ -43,44 +56,64 @@ class PostApi {
     return await this._api.get(`${PostApiUrl.GetPostsByCategory}/${category}`);
   }
 
-  async create(payload: CreatePostPayload): Promise<string> {
+  async create(payload: CreatePostPayload): Promise<PostIdDto> {
     return await this._api.post(`${PostApiUrl.Create}`, payload);
   }
 
-  async update(payload: UpdatePostPayload): Promise<string> {
+  async update(payload: UpdatePostPayload): Promise<PostIdDto> {
     return await this._api.patch(`${PostApiUrl.Update}`, payload);
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<null> {
     return await this._api.delete(`${PostApiUrl.Delete}/${id}`);
   }
 
-  async createComment(payload: CreateCommentPayload): Promise<string> {
-    return await this._api.patch(`${PostApiUrl.CreateComment}`, payload);
+  async createComment(payload: CreateCommentPayload): Promise<PostIdDto> {
+    return await this._api.post(`${PostApiUrl.CreateComment}`, payload);
   }
 
-  async deleteComment(payload: DeleteCommentPayload) {
-    return await this._api.patch(`${PostApiUrl.DeleteComment}`, payload);
+  async deleteComment(payload: DeleteCommentPayload): Promise<PostIdDto> {
+    return await this._api.delete(`${PostApiUrl.DeleteComment}`, {
+      params: payload,
+    });
   }
 
-  async likePost(payload: LikePostPayload): Promise<string> {
+  async likePost(payload: LikePostPayload): Promise<PostIdDto> {
     return await this._api.patch(`${PostApiUrl.LikePost}`, payload);
   }
 
-  async unlikePost(payload: UnlikePostPayload): Promise<string> {
+  async unlikePost(payload: UnlikePostPayload): Promise<PostIdDto> {
     return await this._api.patch(`${PostApiUrl.UnlikePost}`, payload);
   }
 
-  async likeComment(payload: LikeCommentPayload): Promise<string> {
+  async likeComment(payload: LikeCommentPayload): Promise<PostIdDto> {
     return await this._api.patch(`${PostApiUrl.LikeComment}`, payload);
   }
 
-  async unlikeComment(payload: UnlikeCommentPayload): Promise<string> {
+  async unlikeComment(payload: UnlikeCommentPayload): Promise<PostIdDto> {
     return await this._api.patch(`${PostApiUrl.UnlikeComment}`, payload);
   }
 
-  async increaseView(payload: IncreaseViewPayload): Promise<null> {
+  async increaseView(payload: IncreaseViewPayload): Promise<PostIdDto> {
     return await this._api.patch(`${PostApiUrl.IncreaseView}`, payload);
+  }
+
+  async createReply(payload: CreateReplyPayload): Promise<PostIdDto> {
+    return await this._api.post(`${PostApiUrl.CreateReply}`, payload);
+  }
+
+  async deleteReply(payload: DeleteReplyPayload): Promise<PostIdDto> {
+    return await this._api.delete(`${PostApiUrl.DeleteReply}`, {
+      params: payload,
+    });
+  }
+
+  async likeReply(payload: LikeReplyPayload): Promise<PostIdDto> {
+    return await this._api.patch(`${PostApiUrl.LikeReply}`, payload);
+  }
+
+  async unlikeReply(payload: UnlikeReplyPayload): Promise<PostIdDto> {
+    return await this._api.patch(`${PostApiUrl.UnlikeReply}`, payload);
   }
 }
 

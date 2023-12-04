@@ -1,10 +1,13 @@
 "use client";
 
+import { DELETE_COMMENT } from "@/app/constants";
+import CustomTextButton from "@/components/CustomTextButton";
 import { useDeleteCommentMutation } from "@/query/post-query";
 import { DeleteCommentPayload } from "@/types/post/payload";
 import { UserDto } from "@/types/user/dto";
 import { MMDDHHmmTime } from "@/util/time-util";
-import React from "react";
+import { Dispatch, SetStateAction } from "react";
+import { ReplyButton } from "../reply/ReplyButton";
 
 interface Props {
   me: string;
@@ -12,6 +15,9 @@ interface Props {
   createdAt: string;
   commentId: string;
   postId: string;
+  selectedCommentId: string;
+  setSelectedCommentId: Dispatch<SetStateAction<string>>;
+  comment: string;
 }
 
 export default function CommentHeader({
@@ -20,8 +26,12 @@ export default function CommentHeader({
   createdAt,
   commentId,
   postId,
+  selectedCommentId,
+  setSelectedCommentId,
+  comment,
 }: Props) {
   const deleteCommentMutation = useDeleteCommentMutation();
+
   const handleClickCommentDelete = () => {
     const payload: DeleteCommentPayload = {
       postId,
@@ -36,9 +46,20 @@ export default function CommentHeader({
         <img src={user.image} alt="profile_image" className="rounded-full" />
       </div>
       <div className="font-bold">{user.username}</div>
-      <div className="ml-2 text-sm opacity-70">{MMDDHHmmTime(createdAt)}</div>
-      {me === user.id && (
-        <button onClick={handleClickCommentDelete}>삭제</button>
+      <div className="ml-2 text-sm opacity-70 mr-2">
+        {MMDDHHmmTime(createdAt)}
+      </div>
+      <ReplyButton
+        commentId={commentId}
+        selectedCommentId={selectedCommentId}
+        setSelectedCommentId={setSelectedCommentId}
+      />
+      {me === user.id && comment !== DELETE_COMMENT && (
+        <CustomTextButton
+          onClick={handleClickCommentDelete}
+          title="삭제"
+          size="Small"
+        />
       )}
     </div>
   );

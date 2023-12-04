@@ -14,6 +14,7 @@ interface boardComponent {
 }
 
 const boardTitleMap: { [key: string]: boardComponent } = {
+  전체게시판: { id: "allboard", icon: <ArticleIcon /> },
   인기게시판: { id: "bestboard", icon: <ThumbUpAltIcon /> },
   자유게시판: { id: "freeboard", icon: <ArticleIcon /> },
   노하우게시판: { id: "knowhowboard", icon: <SchoolIcon /> },
@@ -25,12 +26,12 @@ const boardTitleMap: { [key: string]: boardComponent } = {
 const BoardsPage = () => {
   return (
     <>
-      <ul className="space-y-1 p-4">
+      <ul className="space-y-1 py-4">
         {Object.keys(boardTitleMap).map((title, index) => (
           <li key={title}>
             <Link
               href={`/boards/${boardTitleMap[title].id}`}
-              className="flex items-center justify-between mb-1 h-16 rounded-lg cursor-pointer"
+              className="flex items-center justify-between mb-1 h-16 px-4 rounded-lg cursor-pointer"
             >
               <div className="flex items-center">
                 <div className="bg-blue-100 p-2 rounded-lg">

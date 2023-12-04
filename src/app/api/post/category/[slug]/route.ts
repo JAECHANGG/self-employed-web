@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getPostsByCategory } from "../../../../../service/post";
+import { getBaseResponse, getErrorResponse } from "@/util/api-routes-util";
+import { NextRequest } from "next/server";
+import { getAllPosts, getPostsByCategory } from "../../../../../service/post";
 
 interface Context {
   params: {
@@ -9,6 +10,8 @@ interface Context {
 
 export async function GET(request: NextRequest, context: Context) {
   const { slug: category } = context.params;
-  // console.log("category", category);
-  return getPostsByCategory(category).then((data) => NextResponse.json(data));
+
+  return getPostsByCategory(category)
+    .then((data) => getBaseResponse(data))
+    .catch((error) => getErrorResponse(error));
 }

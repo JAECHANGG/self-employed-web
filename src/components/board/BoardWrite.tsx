@@ -3,22 +3,30 @@
 import { useCreatePostMutation } from "@/query/post-query";
 import { CreatePostPayload } from "@/types/post/payload";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Spinner } from "../Spinner";
 
 export const BoardWrite = () => {
+  const router = useRouter();
   const { data: session, status } = useSession();
 
   const initPayload: CreatePostPayload = {
     title: "",
     category: "",
     content: "",
-    user: "",
+    socialId: "",
   };
   const [payload, setPayload] = useState<CreatePostPayload>(initPayload);
   const createPostMutation = useCreatePostMutation();
 
   const handleClickCreateButton = () => {
-    createPostMutation.mutateAsync(payload);
+    createPostMutation.mutate(payload, {
+      onSuccess: (response) => {
+        //!! TODO replace 되도록
+        router.replace(`/boards/${payload.category}/${response.id}`);
+      },
+    });
   };
 
   const handleChangePayload = (
@@ -30,7 +38,7 @@ export const BoardWrite = () => {
 
   useEffect(() => {
     if (status === "authenticated") {
-      setPayload({ ...payload, user: session.user.id });
+      setPayload({ ...payload, socialId: session.user.id });
     }
   }, [status]);
 
@@ -41,6 +49,7 @@ export const BoardWrite = () => {
 
   return (
     <div>
+      {createPostMutation.isLoading && <Spinner />}
       <div>BoardWrite</div>
       <button onClick={handleClickCreateButton}>글 생성하기 버튼‼️</button>
       <div>

@@ -1,4 +1,10 @@
 import { FireIcon } from "@/components/image/FireIcon";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "알림페이지",
+  description: "장사의 신에서 보낸 알림을 확인하실 수 있습니다.",
+};
 
 export default function NotificationsPage() {
   return (

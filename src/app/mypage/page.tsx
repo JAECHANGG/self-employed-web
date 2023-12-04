@@ -4,6 +4,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import SchoolIcon from "@mui/icons-material/School";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
 
@@ -11,6 +12,11 @@ interface boardComponent {
   id: string;
   icon: React.ReactNode;
 }
+
+export const metadata: Metadata = {
+  title: "마이페이지",
+  description: "나의 정보를 확인 및 수정",
+};
 
 const boardTitleMap: { [key: string]: boardComponent } = {
   "내 정보 보기": { id: "detail", icon: <ThumbUpAltIcon /> },
@@ -22,12 +28,12 @@ const boardTitleMap: { [key: string]: boardComponent } = {
 
 export default function MyPage() {
   return (
-    <ul className="space-y-1 p-4">
+    <ul className="space-y-1 py-4">
       {Object.keys(boardTitleMap).map((title, index) => (
         <li key={title}>
           <Link
             href={`/mypage/${boardTitleMap[title].id}`}
-            className="flex items-center justify-between mb-1 h-16 rounded-lg cursor-pointer"
+            className="flex items-center justify-between mb-1 h-16 px-4 rounded-lg cursor-pointer"
           >
             <div className="flex items-center">
               <div className="bg-blue-100 p-2 rounded-lg">

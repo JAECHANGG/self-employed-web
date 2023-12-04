@@ -1,13 +1,16 @@
 "use client";
 
-import { useGetPostByIdQuery } from "@/query/post-query";
+import {
+  useGetPostByIdQuery,
+  useIncreaseViewMutation,
+} from "@/query/post-query";
 import { useGetUserQuery } from "@/query/user-query";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-
-import { postApi } from "@/api/post/post-api";
+import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Spinner } from "../Spinner";
+import AddCollection from "../collection/AddCollection";
+import DeleteCollection from "../collection/DeleteCollection";
 import { LikePost } from "../like/post/LikePost";
 import { UnlikePost } from "../unlike/post/UnlikePost";
 import { BoardDetailContentHeader } from "./BoardDetailContentHeader";
@@ -19,77 +22,91 @@ interface Props {
 }
 
 export const BoardDetailContainer = ({ id }: Props) => {
-  const { data, isLoading, refetch } = useGetPostByIdQuery(id);
+  const { data, isLoading } = useGetPostByIdQuery(id);
   const { data: me } = useGetUserQuery();
-  console.log("comment@@@", data?.comments);
-
-  const increaseView = async () => {
-    await postApi.increaseView({
-      postId: id,
-    });
-    refetch();
-  };
+  const enabled = useRef(true);
+  const increaseView = useIncreaseViewMutation();
+  const [selectedCommentId, setSelectedCommentId] = useState("");
 
   useEffect(() => {
-    increaseView();
-  }, []);
+    if (!enabled.current) {
+      return;
+    }
 
-  if (isLoading) return <div>로딩중...</div>;
+    increaseView.mutate({
+      postId: id,
+    });
+    enabled.current = false;
+  }, [data]);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   if (!data || !me) {
     return <div>데이터가 없습니다...</div>;
   }
 
   const isLike = data.like.map((likeUser) => likeUser.id).includes(me.id);
+  const isCollection = me.collections.map((post) => post.id).includes(data.id);
 
   return (
-    <div className="flex flex-col">
-      <div className="flex flex-col h-[83vh]">
-        <div className="flex flex-col">
-          <div className="mb-5">
-            <BoardDetailContentHeader data={data} me={me?.id || ""} />
+    <section className="flex flex-col h-full overflow-auto">
+      <main className="flex flex-col p-4">
+        <header className="mb-5">
+          <BoardDetailContentHeader data={data} me={me?.id || ""} />
+        </header>
+        <h1 className="font-bold text-2xl mb-5">{data.title}</h1>
+        <span className="mb-10">{data.content}</span>
+        <footer className="flex justify-between">
+          <div className="flex items-center">
+            {isLike ? (
+              <UnlikePost
+                postId={data.id}
+                user={me}
+                likeNumber={data.like.length}
+              />
+            ) : (
+              <LikePost
+                postId={data.id}
+                user={me}
+                likeNumber={data.like.length}
+              />
+            )}
+            <span className="flex items-center justify-center text-sm text-blue-700 pr-1">
+              <ModeCommentOutlinedIcon style={{ height: 17 }} />
+            </span>
+            {data.comments.length}
+            <span className="flex items-center justify-center text-sm text-green-700 pr-1">
+              <RemoveRedEyeOutlinedIcon style={{ height: 17 }} />
+            </span>
+            {data.view}
           </div>
-          <div className="font-bold text-2xl mb-5">{data.title}</div>
-          <div className="mb-10">{data.content}</div>
-          <div className="flex justify-between">
-            <div className="flex items-center">
-              {isLike ? (
-                <UnlikePost
-                  postId={data.id}
-                  userId={me.id}
-                  likeNumber={data.like.length}
-                />
-              ) : (
-                <LikePost
-                  postId={data.id}
-                  userId={me.id}
-                  likeNumber={data.like.length}
-                />
-              )}
-              <span className="flex items-center justify-center text-sm text-blue-700 pr-1">
-                <ChatBubbleOutlineIcon style={{ height: 17 }} />
-              </span>
-              {data.comments.length}
-              <span className="flex items-center justify-center text-sm text-green-700 pr-1">
-                <RemoveRedEyeOutlinedIcon style={{ height: 17 }} />
-              </span>
-              {data.view}
-            </div>
-            <div className="flex items-center">
-              <span className="flex items-center justify-center text-sm text-gray-600">
-                <BookmarkBorderIcon style={{ height: 20 }} />
-              </span>
-            </div>
+          <div className="flex items-center">
+            {isCollection ? (
+              <DeleteCollection postId={data.id} userId={me.id} />
+            ) : (
+              <AddCollection postId={data.id} userId={me.id} />
+            )}
           </div>
-        </div>
-        <div className="bg-gray-300 h-[1px] mt-5"></div>
-        <div>
-          <Comment me={me} comments={data.comments} postId={data.id} />
-        </div>
-      </div>
-      <div className="h-[7vh]">
-        <CommentInput id={id} userObjectId={me.id} />
-      </div>
-    </div>
+        </footer>
+      </main>
+      <div className="bg-myColor-white-gray w-full py-2" />
+      <footer className="px-4 pt-4 pb-10">
+        <Comment
+          me={me}
+          comments={data.comments}
+          postId={data.id}
+          selectedCommentId={selectedCommentId}
+          setSelectedCommentId={setSelectedCommentId}
+        />
+      </footer>
+      <CommentInput
+        id={id}
+        userObjectId={me.id}
+        selectedCommentId={selectedCommentId}
+        setSelectedCommentId={setSelectedCommentId}
+      />
+    </section>
   );
 };

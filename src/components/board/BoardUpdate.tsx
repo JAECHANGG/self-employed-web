@@ -3,13 +3,16 @@
 import { useGetPostByIdQuery, useUpdatePostMutation } from "@/query/post-query";
 import { UpdatePostPayload } from "@/types/post/payload";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Spinner } from "../Spinner";
 
 interface Props {
   slug: string;
 }
 
 export const BoardUpdate = ({ slug: id }: Props) => {
+  const router = useRouter();
   const { data: session, status } = useSession();
   const { data: post } = useGetPostByIdQuery(id);
 
@@ -23,7 +26,11 @@ export const BoardUpdate = ({ slug: id }: Props) => {
   const updatePostMutation = useUpdatePostMutation();
 
   const handleClickUpdateButton = () => {
-    updatePostMutation.mutate(payload);
+    updatePostMutation.mutate(payload, {
+      onSuccess: (response) => {
+        router.replace(`/boards/${payload.category}/${response.id}`);
+      },
+    });
   };
 
   const handleChangePayload = (
@@ -40,6 +47,7 @@ export const BoardUpdate = ({ slug: id }: Props) => {
 
   return (
     <div>
+      {updatePostMutation.isLoading && <Spinner />}
       <div>BoardUpdate</div>
       <button onClick={handleClickUpdateButton}>수정하기 버튼‼️</button>
       <div>

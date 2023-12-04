@@ -1,5 +1,24 @@
 import mongoose, { Schema } from "mongoose";
 
+const replySchema = new Schema(
+  {
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    reply: { type: String, required: true },
+    like: {
+      type: [{ type: Schema.Types.ObjectId, ref: "User", required: true }],
+    },
+  },
+  { timestamps: true }
+);
+
+replySchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
+
+replySchema.set("toJSON", {
+  virtuals: true,
+});
+
 const commentSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
@@ -7,6 +26,7 @@ const commentSchema = new Schema(
     like: {
       type: [{ type: Schema.Types.ObjectId, ref: "User", required: true }],
     },
+    replies: { type: [replySchema] },
   },
   { timestamps: true }
 );
