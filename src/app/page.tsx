@@ -22,23 +22,16 @@ const LoginPage = async ({ searchParams: { callbackUrl } }: Props) => {
 
   const providers = (await getProviders()) ?? {};
   return (
-    <section className="box-border px-4 py-12 flex flex-col justify-between items-center h-screen w-full">
-      <main className="flex flex-col items-center w-full">
-        <Image
-          className="logo-image"
-          width={200}
-          height={200}
-          src="https://yt3.googleusercontent.com/ytc/AOPolaTZzFi9FuptnL36UNZ4q2zNXPjtn4hVk9FGGlpX=s900-c-k-c0x00ffffff-no-rj"
-          alt="logo image"
-        />
-        <h1 className="mb-12">장사의 신</h1>
-        <Login providers={providers} callbackUrl={callbackUrl} />
-      </main>
-      <footer className="w-full flex justify-around">
-        {/* <span>문의하기</span>
-        <span>이용약관</span> */}
-      </footer>
-    </section>
+    <article className="box-border px-4 flex flex-col justify-center items-center w-full h-full">
+      <Image
+        className="rounded-full mb-12"
+        width={200}
+        height={200}
+        src="https://yt3.googleusercontent.com/ytc/AOPolaTZzFi9FuptnL36UNZ4q2zNXPjtn4hVk9FGGlpX=s900-c-k-c0x00ffffff-no-rj"
+        alt="logo image"
+      />
+      <Login providers={providers} callbackUrl={callbackUrl} />
+    </article>
   );
 };
 

@@ -1,10 +1,13 @@
 import { userApi } from "@/api/user/user-api";
 import { queryClient } from "@/app/provider";
+import { UserDto } from "@/types/user/dto";
 import {
-  AddCollectionPayload,
-  DeleteCollectionPayload,
-} from "@/types/user/dto";
-import { UpdateUserPayload } from "@/types/user/payload";
+  DeleteSearchKeywordPayload,
+  DeleteSearchKeywordsAllPayload,
+  GetSearchKeywordsPayload,
+  UpdateUserPayload,
+} from "@/types/user/payload";
+import { AddCollection, DeleteCollection } from "@/types/user/user";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export enum UserQueryKey {
@@ -12,6 +15,9 @@ export enum UserQueryKey {
   UpdateUser = "updateUser",
   AddCollection = "addCollection",
   DeleteCollection = "deleteCollection",
+  GetSearchKeywords = "getSearchKeywords",
+  DeleteSearchKeyword = "deleteSearchKeyword",
+  DeleteSearchKeywordsAll = "deleteSearchKeywordsAll",
 }
 
 export const useGetUserQuery = () => {
@@ -34,10 +40,36 @@ export const useUpdateUserMutation = () => {
 export const useAddCollectionMutation = () => {
   return useMutation({
     mutationKey: [UserQueryKey.AddCollection],
-    mutationFn: (payload: AddCollectionPayload) =>
-      userApi.addCollection(payload),
-    onSuccess: () => {
+    mutationFn: ({ post, userId }: AddCollection) =>
+      userApi.addCollection({ postId: post.id, userId: userId }),
+    onMutate: async (newPayload: AddCollection) => {
+      const { post } = newPayload;
+      await queryClient.cancelQueries({
+        queryKey: [UserQueryKey.GetUser],
+      });
+
+      const previousPayload: UserDto | undefined = queryClient.getQueryData([
+        UserQueryKey.GetUser,
+      ]);
+
+      if (previousPayload) {
+        queryClient.setQueryData([UserQueryKey.GetUser], {
+          ...previousPayload,
+          collections: [...previousPayload.collections, post],
+        });
+      }
+
+      return { previousPayload };
+    },
+    onError: (err, newPayload, context) => {
+      queryClient.setQueryData(
+        [UserQueryKey.GetUser],
+        context?.previousPayload
+      );
+    },
+    onSettled: (response) => {
       queryClient.invalidateQueries([UserQueryKey.GetUser]);
+      console.log("success", response);
     },
   });
 };
@@ -45,10 +77,73 @@ export const useAddCollectionMutation = () => {
 export const useDeleteCollectionMutation = () => {
   return useMutation({
     mutationKey: [UserQueryKey.DeleteCollection],
-    mutationFn: (payload: DeleteCollectionPayload) =>
-      userApi.deleteCollection(payload),
-    onSuccess: () => {
+    mutationFn: ({ post, userId }: DeleteCollection) =>
+      userApi.deleteCollection({
+        postId: post.id,
+        userId: userId,
+      }),
+    onMutate: async (newPayload: DeleteCollection) => {
+      const { post } = newPayload;
+      await queryClient.cancelQueries({
+        queryKey: [UserQueryKey.GetUser],
+      });
+
+      const previousPayload: UserDto | undefined = queryClient.getQueryData([
+        UserQueryKey.GetUser,
+      ]);
+
+      if (previousPayload) {
+        queryClient.setQueryData([UserQueryKey.GetUser], {
+          ...previousPayload,
+          collections: previousPayload.collections.filter(
+            (collection) => collection.id !== post.id
+          ),
+        });
+      }
+
+      return { previousPayload };
+    },
+    onError: (err, newPayload, context) => {
+      queryClient.setQueryData(
+        [UserQueryKey.GetUser],
+        context?.previousPayload
+      );
+    },
+    onSettled: (response) => {
       queryClient.invalidateQueries([UserQueryKey.GetUser]);
+      console.log("success", response);
+    },
+  });
+};
+
+export const useGetSearchKeywordsQuery = (
+  payload: GetSearchKeywordsPayload
+) => {
+  return useQuery({
+    enabled: !!payload.userId,
+    queryKey: [UserQueryKey.GetSearchKeywords],
+    queryFn: () => userApi.getSearchKeywords(payload),
+  });
+};
+
+export const useDeleteSearchKeywordMutation = () => {
+  return useMutation({
+    mutationKey: [UserQueryKey.DeleteSearchKeyword],
+    mutationFn: (payload: DeleteSearchKeywordPayload) =>
+      userApi.deleteSearchKeyword(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries([UserQueryKey.GetSearchKeywords]);
+    },
+  });
+};
+
+export const useDeleteSearchKeywordsAllMutation = () => {
+  return useMutation({
+    mutationKey: [UserQueryKey.DeleteSearchKeywordsAll],
+    mutationFn: (payload: DeleteSearchKeywordsAllPayload) =>
+      userApi.deleteSearchKeywordsAll(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries([UserQueryKey.GetSearchKeywords]);
     },
   });
 };

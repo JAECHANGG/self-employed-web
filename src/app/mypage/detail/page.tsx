@@ -1,18 +1,17 @@
 "use client";
 
-import Modal from "@/components/Modal";
-import ModalPortal from "@/components/ModalPortal";
+import { useModal } from "@/hooks/useModal";
 import { useGetUserQuery, useUpdateUserMutation } from "@/query/user-query";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 export default function DetailPage() {
   const { data, isLoading } = useGetUserQuery();
   const updateUserMutation = useUpdateUserMutation();
 
   const [error, setError] = useState<string>();
-  const [openModal, setOpenModal] = useState(false);
   const [imageSrc, setImageSrc] = useState("");
   const [username, setUsername] = useState("");
+  const { openModal } = useModal();
   // const [uploadedImage, setUploadedImage] = useState<File>();
 
   // const onChangeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -28,20 +27,16 @@ export default function DetailPage() {
   //   }
   // };
 
-  const onChangeUsernameHandler = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeUsername = (e: ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
 
-  const onSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     updateUserMutation.mutate(
       { username },
       {
         onError: (error) => {
           console.log("error", error);
-        },
-        onSuccess: () => {
-          setOpenModal(false);
         },
       }
     );
@@ -85,21 +80,21 @@ export default function DetailPage() {
         <input
           type="text"
           value={username || ""}
-          onChange={onChangeUsernameHandler}
+          onChange={handleChangeUsername}
         />
-        <button type="button" onClick={() => setOpenModal(true)}>
+        <button
+          type="button"
+          onClick={() => {
+            openModal({
+              message: "정말로 변경하시겠습니까?",
+              onClick: handleSubmit,
+            });
+          }}
+        >
           변경
         </button>
       </form>
       <div>{data?.email}</div>
-      {openModal && (
-        <ModalPortal>
-          <Modal
-            onClick={onSubmitHandler}
-            onClose={() => setOpenModal(false)}
-          />
-        </ModalPortal>
-      )}
     </div>
   );
 }

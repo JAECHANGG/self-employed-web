@@ -1,24 +1,39 @@
-import React, { FormEvent } from "react";
+"use client";
 
-interface Props {
-  onClose: () => void;
-  onClick: (e: FormEvent<HTMLFormElement>) => void | (() => void);
-}
+import { useModal } from "@/hooks/useModal";
+import ModalPortal from "./ModalPortal";
 
-export default function Modal({ onClose, onClick }: Props) {
+export default function Modal() {
+  const { modalState, closeModal } = useModal();
+
   return (
-    <section
-      className="fixed top-0 left-0 flex flex-col justify-center items-center w-full h-full bg-neutral-800/70 z-50"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          onClose();
-        }
-      }}
-    >
-      <form onSubmit={onClick}>
-        <button onClick={onClose}>취소</button>
-        <button type="submit">확인</button>
-      </form>
-    </section>
+    <>
+      {modalState.isOpen ? (
+        <ModalPortal>
+          <section
+            className="fixed top-0 left-0 flex flex-col justify-center items-center w-full h-full bg-neutral-800/70 z-50"
+            onClick={closeModal}
+          >
+            <div className="w-[75%] bg-white p-6 rounded-lg z-50">
+              <div className="mb-6">{modalState.message}</div>
+              <div className="flex justify-end">
+                <button
+                  className="text-sm font-semibold"
+                  onClick={modalState.onClick}
+                >
+                  확인
+                </button>
+                <button
+                  className="ml-4 text-gray-700 text-sm"
+                  onClick={closeModal}
+                >
+                  취소
+                </button>
+              </div>
+            </div>
+          </section>
+        </ModalPortal>
+      ) : null}
+    </>
   );
 }

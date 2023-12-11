@@ -11,11 +11,13 @@ import {
   LikeCommentPayload,
   LikePostPayload,
   LikeReplyPayload,
+  SearchPostPayload,
   UnlikeCommentPayload,
   UnlikeReplyPayload,
   UpdatePostPayload,
 } from "@/types/post/payload";
 import dbConnect from "@/util/database";
+import { createSearchKeyword } from "./user";
 
 export async function createPost(payload: CreatePostPayload) {
   await dbConnect();
@@ -393,4 +395,12 @@ export async function unlikeReply(payload: UnlikeReplyPayload) {
   } catch (error) {
     throw error;
   }
+}
+
+export async function getSearchPostsAll(payload: SearchPostPayload) {
+  await dbConnect();
+
+  await createSearchKeyword(payload);
+
+  return [];
 }

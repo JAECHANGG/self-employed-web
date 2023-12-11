@@ -1,5 +1,5 @@
-import { BoardContainer } from "@/components/board/BoardContainer";
+import { BoardController } from "@/components/board/BoardController";
 
 export default function QnABoardPage() {
-  return <BoardContainer />;
+  return <BoardController />;
 }

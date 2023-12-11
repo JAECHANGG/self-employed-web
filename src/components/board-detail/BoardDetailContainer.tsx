@@ -5,7 +5,7 @@ import {
   useIncreaseViewMutation,
 } from "@/query/post-query";
 import { useGetUserQuery } from "@/query/user-query";
-import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
+import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import { useEffect, useRef, useState } from "react";
 import { Spinner } from "../Spinner";
@@ -51,7 +51,7 @@ export const BoardDetailContainer = ({ id }: Props) => {
   const isCollection = me.collections.map((post) => post.id).includes(data.id);
 
   return (
-    <section className="flex flex-col h-full overflow-auto">
+    <section className="flex flex-col h-full overflow-auto scrollbar-hide">
       <main className="flex flex-col p-4">
         <header className="mb-5">
           <BoardDetailContentHeader data={data} me={me?.id || ""} />
@@ -74,7 +74,7 @@ export const BoardDetailContainer = ({ id }: Props) => {
               />
             )}
             <span className="flex items-center justify-center text-sm text-blue-700 pr-1">
-              <ModeCommentOutlinedIcon style={{ height: 17 }} />
+              <ChatBubbleOutlineOutlinedIcon style={{ height: 17 }} />
             </span>
             {data.comments.length}
             <span className="flex items-center justify-center text-sm text-green-700 pr-1">
@@ -84,15 +84,15 @@ export const BoardDetailContainer = ({ id }: Props) => {
           </div>
           <div className="flex items-center">
             {isCollection ? (
-              <DeleteCollection postId={data.id} userId={me.id} />
+              <DeleteCollection post={data} userId={me.id} />
             ) : (
-              <AddCollection postId={data.id} userId={me.id} />
+              <AddCollection post={data} userId={me.id} />
             )}
           </div>
         </footer>
       </main>
       <div className="bg-myColor-white-gray w-full py-2" />
-      <footer className="px-4 pt-4 pb-10">
+      <footer className=" pb-8">
         <Comment
           me={me}
           comments={data.comments}

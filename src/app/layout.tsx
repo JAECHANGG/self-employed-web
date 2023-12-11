@@ -1,5 +1,6 @@
 import AuthContext from "@/components/AuthContext";
 import { BottomNavigate } from "@/components/layout/BottomNavigate";
+import { Content } from "@/components/layout/Content";
 import { Header } from "@/components/layout/Header";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
@@ -28,7 +29,7 @@ export default async function RootLayout({
         <AuthContext>
           <Provider>
             {session && <Header />}
-            <main className="h-[90vh] relative">{children}</main>
+            <Content>{children}</Content>
             {session && <BottomNavigate />}
           </Provider>
         </AuthContext>

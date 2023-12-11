@@ -1,42 +1,31 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import { useAddCollectionMutation } from "@/query/user-query";
-import ModalPortal from "../ModalPortal";
-import Modal from "../Modal";
+import { PostByIdDto } from "@/types/post/dto";
+import { convertPostByIdDtoToPostByCategoryDto } from "@/util/converter/post-converter";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 
 interface Props {
-  postId: string;
+  post: PostByIdDto;
   userId: string;
 }
 
-export default function AddCollection({ postId, userId }: Props) {
-  const [openModal, setOpenModal] = useState(false);
+export default function AddCollection({ post, userId }: Props) {
   const addCollection = useAddCollectionMutation();
 
-  const handleClickPostCollectionButton = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleClickPostCollectionButton = () => {
     addCollection.mutate({
-      postId,
+      post: convertPostByIdDtoToPostByCategoryDto(post),
       userId,
     });
   };
 
   return (
     <span
-      onClick={() => setOpenModal(true)}
-      className="flex items-center justify-center text-sm text-gray-600"
+      onClick={handleClickPostCollectionButton}
+      className="flex items-center justify-center text-sm"
     >
       <BookmarkBorderIcon style={{ height: 20 }} />
-      {openModal && (
-        <ModalPortal>
-          <Modal
-            onClick={handleClickPostCollectionButton}
-            onClose={() => setOpenModal(false)}
-          />
-        </ModalPortal>
-      )}
     </span>
   );
 }

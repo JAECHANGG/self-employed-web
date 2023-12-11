@@ -11,6 +11,7 @@ import {
   LikeCommentPayload,
   LikePostPayload,
   LikeReplyPayload,
+  SearchPostPayload,
   UnlikeCommentPayload,
   UnlikePostPayload,
   UnlikeReplyPayload,
@@ -37,6 +38,7 @@ export enum PostQueryKey {
   DeleteReply = "DeleteReply",
   LikeReply = "LikeReply",
   UnlikeReply = "UnlikeReply",
+  SearchPostsAll = "SearchPostsAll",
 }
 
 export const useGetAllPostsQuery = () => {
@@ -144,7 +146,7 @@ export const useUnlikePostMutation = () => {
   return useMutation({
     mutationKey: [PostQueryKey.UnlikePost],
     mutationFn: (payload: UnlikePostPayload) => postApi.unlikePost(payload),
-    onMutate: async (newPayload: LikePostPayload) => {
+    onMutate: async (newPayload: UnlikePostPayload) => {
       const { postId } = newPayload;
       await queryClient.cancelQueries({
         queryKey: [PostQueryKey.GetPostsById, postId],
@@ -463,5 +465,13 @@ export const useUnlikeReplyMutation = () => {
       });
       console.log("success", response);
     },
+  });
+};
+
+export const useGetSearchPostsAllQuery = (payload: SearchPostPayload) => {
+  return useQuery({
+    // enabled: payload.userId && payload.keyword,
+    queryKey: [PostQueryKey.SearchPostsAll],
+    queryFn: () => postApi.getSearchPostsAll(payload),
   });
 };

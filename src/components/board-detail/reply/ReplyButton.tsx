@@ -1,8 +1,8 @@
 "use client";
 
 import CustomIconButton from "@/components/CustomIconButton";
-import CustomTextButton from "@/components/CustomTextButton";
-import AddCommentOutlinedIcon from "@mui/icons-material/AddCommentOutlined";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import { Dispatch, SetStateAction } from "react";
 
 interface Props {
@@ -27,20 +27,13 @@ export const ReplyButton: React.FC<Props> = ({
   return (
     <>
       {selectedCommentId === commentId ? (
-        <CustomTextButton
-          onClick={handleClickCancelReplyButton}
-          title="답글취소"
-          size="Small"
-        />
+        <CustomIconButton onClick={handleClickCancelReplyButton}>
+          <ClearOutlinedIcon style={{ height: 14 }} />
+        </CustomIconButton>
       ) : (
         <CustomIconButton onClick={handleClickReplyButton}>
-          <AddCommentOutlinedIcon style={{ height: 15 }} />
+          <ChatBubbleOutlineIcon style={{ height: 14 }} />
         </CustomIconButton>
-        // <CustomTextButton
-        //   onClick={handleClickReplyButton}
-        //   title="답글"
-        //   size="Small"
-        // />
       )}
     </>
   );

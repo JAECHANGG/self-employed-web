@@ -5,10 +5,5 @@ interface Props {
 }
 
 export default function BoardWritePage({ params: { slug } }: Props) {
-  return (
-    <div>
-      {slug}
-      <BoardWrite />
-    </div>
-  );
+  return <BoardWrite category={slug} />;
 }

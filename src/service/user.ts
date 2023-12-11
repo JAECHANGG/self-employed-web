@@ -1,7 +1,15 @@
 import { User } from "@/schemas/user";
 import { PostByIdDto } from "@/types/post/dto";
-import { AddCollectionPayload } from "@/types/user/dto";
+import {
+  AddCollectionPayload,
+  DeleteSearchKeywordsAllPayload,
+  DeleteSearchKeywordPayload,
+} from "@/types/user/payload";
 import { OAuthUser } from "@/types/user/oauth-user";
+import {
+  AddSearchKeywordPayload,
+  GetSearchKeywordsPayload,
+} from "@/types/user/payload";
 import dbConnect from "@/util/database";
 
 export async function updateUser(userId: string, username: string) {
@@ -119,6 +127,80 @@ export async function deleteCollection(payload: AddCollectionPayload) {
       {
         $pull: {
           collections: postId,
+        },
+      }
+    );
+    return null;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function createSearchKeyword({
+  userId,
+  keyword,
+}: AddSearchKeywordPayload) {
+  console.log("@@@@@@@@@@@@@@@@");
+  try {
+    const result = await User.findOneAndUpdate(
+      { socialId: userId },
+      {
+        $push: {
+          keywords: { keyword },
+        },
+      }
+    );
+    console.log("REWRWR#@R@#R@", result);
+    return null;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getSearchKeyword({ userId }: GetSearchKeywordsPayload) {
+  await dbConnect();
+
+  try {
+    const result = await User.findOne({ socialId: userId });
+    return result.keywords;
+  } catch (error) {
+    console.log("searchKeyword를 찾을 수 없습니다.", error);
+    return false;
+  }
+}
+
+export async function deleteSearchKeyword(payload: DeleteSearchKeywordPayload) {
+  const { userId, keywordId } = payload;
+
+  await dbConnect();
+
+  try {
+    await User.findOneAndUpdate(
+      { socialId: userId },
+      {
+        $pull: {
+          keywords: { _id: keywordId },
+        },
+      }
+    );
+    return null;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function deleteSearchKeywordsAll(
+  payload: DeleteSearchKeywordsAllPayload
+) {
+  const { userId } = payload;
+  await dbConnect();
+
+  try {
+    await User.findOneAndUpdate(
+      { socialId: userId },
+      {
+        $set: {
+          keywords: [],
         },
       }
     );

@@ -2,7 +2,7 @@ import { LikeComment } from "@/components/like/comment/LikeComment";
 import { UnlikeComment } from "@/components/unlike/comment/UnlikeComment";
 import { CommentDto } from "@/types/post/dto";
 import { UserDto } from "@/types/user/dto";
-import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
+import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import { Dispatch, SetStateAction } from "react";
 import { Reply } from "../reply/Reply";
 import CommentHeader from "./CommentHeader";
@@ -30,8 +30,8 @@ export const Comment = ({
         return (
           <div className="flex flex-col mb-2" key={id}>
             <div
-              className={`flex flex-col mb-2 ${
-                selectedCommentId === id && "bg-pink-300"
+              className={`flex flex-col px-4 py-3 ${
+                selectedCommentId === id && "bg-blue-50"
               }`}
             >
               <CommentHeader
@@ -65,7 +65,7 @@ export const Comment = ({
                 <FavoriteBorderIcon style={{ height: 17 }} /> {like.length}
               </span> */}
                 <span className="text-blue-700">
-                  <ModeCommentOutlinedIcon style={{ height: 17 }} />
+                  <ChatBubbleOutlineOutlinedIcon style={{ height: 17 }} />
                   {replies.length}
                 </span>
               </div>

@@ -1,5 +1,5 @@
-import { BoardContainer } from "@/components/board/BoardContainer";
+import { AllController } from "@/components/board/AllController";
 
 export default function AllBoardPage() {
-  return <BoardContainer />;
+  return <AllController />;
 }

@@ -9,6 +9,7 @@ import {
   LikeCommentPayload,
   LikePostPayload,
   LikeReplyPayload,
+  SearchPostPayload,
   UnlikeCommentPayload,
   UnlikePostPayload,
   UnlikeReplyPayload,
@@ -35,6 +36,7 @@ enum PostApiUrl {
   DeleteReply = "/post/reply",
   LikeReply = "/post/like/reply",
   UnlikeReply = "/post/unlike/reply",
+  SearchPostsAll = "/post/search",
 }
 
 class PostApi {
@@ -114,6 +116,14 @@ class PostApi {
 
   async unlikeReply(payload: UnlikeReplyPayload): Promise<PostIdDto> {
     return await this._api.patch(`${PostApiUrl.UnlikeReply}`, payload);
+  }
+
+  async getSearchPostsAll(
+    payload: SearchPostPayload
+  ): Promise<PostByCategoryDto[]> {
+    return await this._api.get(`${PostApiUrl.SearchPostsAll}`, {
+      params: payload,
+    });
   }
 }
 

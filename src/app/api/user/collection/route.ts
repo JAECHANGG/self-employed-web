@@ -2,7 +2,7 @@ import { addCollection, deleteCollection } from "@/service/user";
 import {
   AddCollectionPayload,
   DeleteCollectionPayload,
-} from "@/types/user/dto";
+} from "@/types/user/payload";
 import { getBaseResponse, getErrorResponse } from "@/util/api-routes-util";
 import { NextRequest } from "next/server";
 
@@ -19,7 +19,7 @@ export async function DELETE(request: NextRequest) {
   const postId = searchParams.get("postId");
   const userId = searchParams.get("userId");
 
-  const deleteCollectionPayload: DeleteCollectionPayload = {
+  const deleteCollectionPayload = {
     postId: postId || "",
     userId: userId || "",
   };

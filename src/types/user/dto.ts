@@ -11,12 +11,9 @@ export interface UserDto {
   collections: PostByCategoryDto[];
 }
 
-export interface AddCollectionPayload {
-  postId: string;
-  userId: string;
-}
-
-export interface DeleteCollectionPayload {
-  postId: string;
-  userId: string;
+export interface GetSearchKeywordDto {
+  id: string;
+  keyword: string;
+  createdAt: string;
+  updatedAt: string;
 }

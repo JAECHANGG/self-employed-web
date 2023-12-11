@@ -1,5 +1,11 @@
-import { AddCollectionPayload, UserDto } from "@/types/user/dto";
-import { UpdateUserPayload } from "@/types/user/payload";
+import { GetSearchKeywordDto, UserDto } from "@/types/user/dto";
+import {
+  AddCollectionPayload,
+  DeleteSearchKeywordPayload,
+  DeleteSearchKeywordsAllPayload,
+  GetSearchKeywordsPayload,
+  UpdateUserPayload,
+} from "@/types/user/payload";
 import { AxiosInstance } from "axios";
 import { baseApi } from "../base-api";
 
@@ -8,6 +14,9 @@ enum UserApiUrl {
   Update = "/user",
   AddCollection = "/user/collection",
   DeleteCollection = "/user/collection",
+  GetSearchKeyword = "/user/keyword",
+  DeleteSearchKeyword = "/user/keyword",
+  DeleteSearchKeywordsAll = "/user/keyword",
 }
 
 class UserApi {
@@ -33,6 +42,31 @@ class UserApi {
     return await this._api.delete(`${UserApiUrl.DeleteCollection}`, {
       params: payload,
     });
+  }
+
+  async getSearchKeywords(
+    payload: GetSearchKeywordsPayload
+  ): Promise<GetSearchKeywordDto[]> {
+    return await this._api.get(`${UserApiUrl.GetSearchKeyword}`, {
+      params: payload,
+    });
+  }
+
+  async deleteSearchKeyword(
+    payload: DeleteSearchKeywordPayload
+  ): Promise<null> {
+    return await this._api.delete(`${UserApiUrl.DeleteSearchKeyword}`, {
+      params: payload,
+    });
+  }
+
+  async deleteSearchKeywordsAll(
+    payload: DeleteSearchKeywordsAllPayload
+  ): Promise<null> {
+    return await this._api.patch(
+      `${UserApiUrl.DeleteSearchKeywordsAll}`,
+      payload
+    );
   }
 }
 

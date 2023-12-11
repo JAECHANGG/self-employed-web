@@ -1,11 +1,12 @@
 "use client";
 
 import { DELETE_COMMENT } from "@/app/constants";
-import CustomTextButton from "@/components/CustomTextButton";
+import CustomIconButton from "@/components/CustomIconButton";
 import { useDeleteReplyMutation } from "@/query/post-query";
 import { DeleteReplyPayload } from "@/types/post/payload";
 import { UserDto } from "@/types/user/dto";
 import { MMDDHHmmTime } from "@/util/time-util";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 interface Props {
   me: string;
@@ -45,11 +46,12 @@ export default function ReplyHeader({
       <div className="font-bold">{user.username}</div>
       <div className="mx-2 text-sm opacity-70">{MMDDHHmmTime(createdAt)}</div>
       {me === user.id && reply !== DELETE_COMMENT && (
-        <CustomTextButton
-          onClick={handleClickDeleteReplyButton}
-          title="삭제"
-          size="Small"
-        />
+        <CustomIconButton>
+          <DeleteOutlineOutlinedIcon
+            onClick={handleClickDeleteReplyButton}
+            style={{ height: 14 }}
+          />
+        </CustomIconButton>
       )}
     </div>
   );

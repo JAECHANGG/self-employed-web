@@ -1,42 +1,31 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
 import { useDeleteCollectionMutation } from "@/query/user-query";
-import ModalPortal from "../ModalPortal";
-import Modal from "../Modal";
+import { PostByIdDto } from "@/types/post/dto";
+import { convertPostByIdDtoToPostByCategoryDto } from "@/util/converter/post-converter";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 interface Props {
-  postId: string;
+  post: PostByIdDto;
   userId: string;
 }
 
-export default function DeleteCollection({ postId, userId }: Props) {
-  const [openModal, setOpenModal] = useState(false);
+export default function DeleteCollection({ post, userId }: Props) {
   const deleteCollection = useDeleteCollectionMutation();
 
-  const handleClickDeleteCollectionButton = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleClickDeleteCollectionButton = () => {
     deleteCollection.mutate({
-      postId,
+      post: convertPostByIdDtoToPostByCategoryDto(post),
       userId,
     });
   };
 
   return (
     <span
-      onClick={() => setOpenModal(true)}
-      className="flex items-center justify-center text-sm text-gray-600"
+      onClick={handleClickDeleteCollectionButton}
+      className="flex items-center justify-center text-sm"
     >
       <BookmarkIcon style={{ height: 20 }} />
-      {openModal && (
-        <ModalPortal>
-          <Modal
-            onClick={handleClickDeleteCollectionButton}
-            onClose={() => setOpenModal(false)}
-          />
-        </ModalPortal>
-      )}
     </span>
   );
 }

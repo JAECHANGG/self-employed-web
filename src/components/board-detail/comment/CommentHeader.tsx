@@ -1,11 +1,12 @@
 "use client";
 
 import { DELETE_COMMENT } from "@/app/constants";
-import CustomTextButton from "@/components/CustomTextButton";
+import CustomIconButton from "@/components/CustomIconButton";
 import { useDeleteCommentMutation } from "@/query/post-query";
 import { DeleteCommentPayload } from "@/types/post/payload";
 import { UserDto } from "@/types/user/dto";
 import { MMDDHHmmTime } from "@/util/time-util";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { Dispatch, SetStateAction } from "react";
 import { ReplyButton } from "../reply/ReplyButton";
 
@@ -55,11 +56,12 @@ export default function CommentHeader({
         setSelectedCommentId={setSelectedCommentId}
       />
       {me === user.id && comment !== DELETE_COMMENT && (
-        <CustomTextButton
-          onClick={handleClickCommentDelete}
-          title="삭제"
-          size="Small"
-        />
+        <CustomIconButton>
+          <DeleteOutlineOutlinedIcon
+            onClick={handleClickCommentDelete}
+            style={{ height: 14 }}
+          />
+        </CustomIconButton>
       )}
     </div>
   );

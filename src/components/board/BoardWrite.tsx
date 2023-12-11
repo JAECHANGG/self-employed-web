@@ -6,18 +6,27 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Spinner } from "../Spinner";
+import RightArrow from "../../../public/asset/svg/right_arrow.svg";
+import { useBottomSheet } from "@/hooks/useBottomSheet";
+import CategoryBottomSheet from "../bottom-sheet/CategoryBottomSheet";
+import { boardTitleMap } from "@/app/boards/page";
 
-export const BoardWrite = () => {
+interface Props {
+  category: string;
+}
+
+export const BoardWrite = ({ category }: Props) => {
   const router = useRouter();
   const { data: session, status } = useSession();
 
   const initPayload: CreatePostPayload = {
     title: "",
-    category: "",
+    category,
     content: "",
     socialId: "",
   };
   const [payload, setPayload] = useState<CreatePostPayload>(initPayload);
+  const { openBottomSheet, closeBottomSheet } = useBottomSheet();
   const createPostMutation = useCreatePostMutation();
 
   const handleClickCreateButton = () => {
@@ -36,6 +45,11 @@ export const BoardWrite = () => {
     setPayload({ ...payload, [name]: value });
   };
 
+  const handleClickCategory = (category: string) => {
+    setPayload({ ...payload, category });
+    closeBottomSheet();
+  };
+
   useEffect(() => {
     if (status === "authenticated") {
       setPayload({ ...payload, socialId: session.user.id });
@@ -48,34 +62,54 @@ export const BoardWrite = () => {
   }
 
   return (
-    <div>
+    <section className="h-full p-4">
       {createPostMutation.isLoading && <Spinner />}
-      <div>BoardWrite</div>
-      <button onClick={handleClickCreateButton}>글 생성하기 버튼‼️</button>
-      <div>
-        <div>
+      <div className="h-full">
+        <div
+          className="flex justify-between items-center pb-3 border-b border-slate-300 text-xl font-semibold"
+          onClick={() =>
+            openBottomSheet({
+              title: "카테고리 선택",
+              children: (
+                <CategoryBottomSheet
+                  category={category}
+                  onClick={handleClickCategory}
+                />
+              ),
+            })
+          }
+        >
+          <div>
+            {Object.keys(boardTitleMap).find(
+              (key) => boardTitleMap[key].id === payload.category
+            ) || "freeboard"}
+          </div>
+          <RightArrow />
+        </div>
+        <div className="pt-4 pb-3">
           <input
-            style={{ background: "pink" }}
-            placeholder="제목"
+            className="w-full text-2xl font-bold focus:outline-none"
+            placeholder="제목을 입력해주세요."
             onChange={handleChangePayload}
             name="title"
           />
         </div>
-        <div>
-          <input
-            style={{ background: "green" }}
-            placeholder="카테고리"
-            onChange={handleChangePayload}
-            name="category"
-          />
-        </div>
         <textarea
-          style={{ background: "orange" }}
-          placeholder="내용"
+          className="w-full h-5/6 font-medium scrollbar-hide resize-none focus:outline-none"
+          placeholder={`내용을 입력해주세요.
+
+다음과 같은 행위를 금지합니다.
+
+- 욕설 사용
+- 음란물 게시
+- 그 외 분란을 일으킬 수 있는 글`}
           onChange={handleChangePayload}
           name="content"
         />
       </div>
-    </div>
+      <button className="absolute right-2" onClick={handleClickCreateButton}>
+        완료
+      </button>
+    </section>
   );
 };

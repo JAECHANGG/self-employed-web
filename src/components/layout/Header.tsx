@@ -1,4 +1,5 @@
 import { Back } from "../Back";
+import { SearchIconContainer } from "../search/SearchIconContainer";
 
 export const Header = () => {
   return (
@@ -7,6 +8,7 @@ export const Header = () => {
         <Back />
       </div>
       <span className="text-xl font-bold">장사의 신</span>
+      <SearchIconContainer />
     </header>
   );
 };

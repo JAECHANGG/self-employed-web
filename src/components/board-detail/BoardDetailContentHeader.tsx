@@ -3,9 +3,11 @@
 import { useDeletePostMutation } from "@/query/post-query";
 import { PostByIdDto } from "@/types/post/dto";
 import { MMDDHHmmTime } from "@/util/time-util";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import CustomTextButton from "../CustomTextButton";
+import CustomIconButton from "../CustomIconButton";
 import { Spinner } from "../Spinner";
 
 interface Props {
@@ -30,7 +32,7 @@ export const BoardDetailContentHeader = ({ data, me }: Props) => {
     <section className="flex items-center justify-between">
       {deletePostMutation.isLoading && <Spinner />}
       <div className="flex flex-row">
-        <header className="mr-6">
+        <header className="mr-3">
           <div className="w-12 h-12">
             <img
               src={user.image}
@@ -46,17 +48,24 @@ export const BoardDetailContentHeader = ({ data, me }: Props) => {
           </div>
         </main>
       </div>
-      <footer>
+      <footer className="h-12">
         {user.id === me && (
-          <Link href={`/boards/update/${category}/${id}`}>
-            <CustomTextButton onClick={() => {}} title="수정" />
+          <Link
+            href={`/boards/update/${category}/${id}`}
+            style={{ marginRight: "4px" }}
+          >
+            <CustomIconButton>
+              <EditOutlinedIcon style={{ height: 20 }} />
+            </CustomIconButton>
           </Link>
         )}
         {user.id === me && (
-          <CustomTextButton
-            onClick={() => handleClickDeletePost(id)}
-            title="삭제"
-          />
+          <CustomIconButton>
+            <DeleteOutlineOutlinedIcon
+              onClick={() => handleClickDeletePost(id)}
+              style={{ height: 20 }}
+            />
+          </CustomIconButton>
         )}
       </footer>
     </section>
