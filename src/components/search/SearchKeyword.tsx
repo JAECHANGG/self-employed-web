@@ -2,7 +2,7 @@
 
 import {
   useDeleteSearchKeywordMutation,
-  useDeleteSearchKeywordsAllMutation,
+  useDeleteSearchKeywordAllMutation,
   useGetSearchKeywordsQuery,
 } from "@/query/user-query";
 import { useSession } from "next-auth/react";
@@ -11,7 +11,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { Spinner } from "../Spinner";
 import {
   DeleteSearchKeywordPayload,
-  DeleteSearchKeywordsAllPayload,
+  DeleteSearchKeywordAllPayload,
 } from "@/types/user/payload";
 
 export const SearchKeyword = () => {
@@ -20,7 +20,7 @@ export const SearchKeyword = () => {
     userId: session?.user?.id || "",
   });
   const deleteSearchKeyword = useDeleteSearchKeywordMutation();
-  const deleteSearchKeywordsAll = useDeleteSearchKeywordsAllMutation();
+  const deleteSearchKeywordAll = useDeleteSearchKeywordAllMutation();
 
   const handleClickDeleteSearchKeyword = (keywordId: string) => {
     const payload: DeleteSearchKeywordPayload = {
@@ -30,11 +30,11 @@ export const SearchKeyword = () => {
     deleteSearchKeyword.mutate(payload);
   };
 
-  const handleClickDeleteSearchKeywordsAll = () => {
-    const payload: DeleteSearchKeywordsAllPayload = {
+  const handleClickDeleteSearchKeywordAll = () => {
+    const payload: DeleteSearchKeywordAllPayload = {
       userId: session?.user.id || "",
     };
-    deleteSearchKeywordsAll.mutate(payload);
+    deleteSearchKeywordAll.mutate(payload);
   };
 
   if (useGetSearchKeywords.isLoading)
@@ -58,7 +58,7 @@ export const SearchKeyword = () => {
     <section className="p-4 h-full">
       <header className="flex justify-between items-center mb-1">
         <h1 className="font-semibold">최근 검색</h1>
-        <span onClick={handleClickDeleteSearchKeywordsAll}>전체 삭제</span>
+        <span onClick={handleClickDeleteSearchKeywordAll}>전체 삭제</span>
       </header>
       <ul>
         {useGetSearchKeywords.data?.map((searchKeyword) => (

@@ -17,7 +17,6 @@ import {
   UpdatePostPayload,
 } from "@/types/post/payload";
 import dbConnect from "@/util/database";
-import { createSearchKeyword } from "./user";
 
 export async function createPost(payload: CreatePostPayload) {
   await dbConnect();
@@ -400,7 +399,19 @@ export async function unlikeReply(payload: UnlikeReplyPayload) {
 export async function getSearchPostsAll(payload: SearchPostPayload) {
   await dbConnect();
 
-  await createSearchKeyword(payload);
+  const { keyword } = payload;
 
-  return [];
+  try {
+    const posts = await Post.find({
+      $or: [
+        { title: { $regex: keyword, $options: "i" } }, // 'i' 옵션은 대소문자를 구분하지 않음
+        { content: { $regex: keyword, $options: "i" } },
+      ],
+    });
+
+    return posts;
+  } catch (error) {
+    console.error("getSearchPostsAll error", error);
+    throw error;
+  }
 }

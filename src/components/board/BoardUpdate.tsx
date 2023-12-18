@@ -6,6 +6,10 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Spinner } from "../Spinner";
+import { useBottomSheet } from "@/hooks/useBottomSheet";
+import CategoryBottomSheet from "../bottom-sheet/CategoryBottomSheet";
+import RightArrow from "../../../public/asset/svg/right_arrow.svg";
+import { boardTitleMap } from "@/app/boards/page";
 
 interface Props {
   slug: string;
@@ -13,8 +17,8 @@ interface Props {
 
 export const BoardUpdate = ({ slug: id }: Props) => {
   const router = useRouter();
-  const { data: session, status } = useSession();
-  const { data: post } = useGetPostByIdQuery(id);
+  const { data: session } = useSession();
+  const { data: post, isFetching } = useGetPostByIdQuery(id);
 
   const initPayload: UpdatePostPayload = {
     title: post?.title || "",
@@ -23,6 +27,7 @@ export const BoardUpdate = ({ slug: id }: Props) => {
     id,
   };
   const [payload, setPayload] = useState<UpdatePostPayload>(initPayload);
+  const { openBottomSheet, closeBottomSheet } = useBottomSheet();
   const updatePostMutation = useUpdatePostMutation();
 
   const handleClickUpdateButton = () => {
@@ -40,43 +45,70 @@ export const BoardUpdate = ({ slug: id }: Props) => {
     setPayload({ ...payload, [name]: value });
   };
 
+  const handleClickCategory = (category: string) => {
+    setPayload({ ...payload, category });
+    closeBottomSheet();
+  };
+
   if (!session) {
     // TODO session 없음 처리
     return <div>session없음</div>;
   }
 
+  if (updatePostMutation.isLoading || isFetching) {
+    return <Spinner />;
+  }
+
   return (
-    <div>
-      {updatePostMutation.isLoading && <Spinner />}
-      <div>BoardUpdate</div>
-      <button onClick={handleClickUpdateButton}>수정하기 버튼‼️</button>
-      <div>
-        <div>
+    <section className="h-full p-4 scrollbar-hide">
+      <div className="h-full">
+        <div
+          className="flex justify-between items-center pb-3 border-b border-slate-300 text-xl font-semibold"
+          onClick={() =>
+            openBottomSheet({
+              title: "카테고리 선택",
+              children: (
+                <CategoryBottomSheet
+                  category={post?.category || "freeboard"}
+                  onClick={handleClickCategory}
+                />
+              ),
+            })
+          }
+        >
+          <div>
+            {Object.keys(boardTitleMap).find(
+              (key) => boardTitleMap[key].id === post?.category
+            ) || "freeboard"}
+          </div>
+          <RightArrow />
+        </div>
+        <div className="pt-4 pb-3">
           <input
-            style={{ background: "pink" }}
-            placeholder="제목"
+            className="w-full text-2xl font-bold focus:outline-none"
+            placeholder="제목을 입력해주세요."
             onChange={handleChangePayload}
             name="title"
-            value={payload.title}
-          />
-        </div>
-        <div>
-          <input
-            style={{ background: "green" }}
-            placeholder="카테고리"
-            onChange={handleChangePayload}
-            name="category"
-            value={payload.category}
+            // value={payload.title}
+            defaultValue={post?.title}
           />
         </div>
         <textarea
-          style={{ background: "orange" }}
-          placeholder="내용"
+          className="w-full h-5/6 font-medium scrollbar-hide resize-none focus:outline-none"
+          placeholder={`내용을 입력해주세요.
+
+다음과 같은 행위를 금지합니다.
+          
+- 욕설 사용
+- 음란물 게시
+- 그 외 분란을 일으킬 수 있는 글`}
           onChange={handleChangePayload}
           name="content"
-          value={payload.content}
+          // value={payload.content}
+          defaultValue={post?.content}
         />
       </div>
-    </div>
+      <button onClick={handleClickUpdateButton}>수정</button>
+    </section>
   );
 };

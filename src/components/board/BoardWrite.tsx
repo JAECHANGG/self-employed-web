@@ -92,6 +92,7 @@ export const BoardWrite = ({ category }: Props) => {
             placeholder="제목을 입력해주세요."
             onChange={handleChangePayload}
             name="title"
+            value={payload.title}
           />
         </div>
         <textarea
@@ -105,6 +106,7 @@ export const BoardWrite = ({ category }: Props) => {
 - 그 외 분란을 일으킬 수 있는 글`}
           onChange={handleChangePayload}
           name="content"
+          value={payload.content}
         />
       </div>
       <button className="absolute right-2" onClick={handleClickCreateButton}>

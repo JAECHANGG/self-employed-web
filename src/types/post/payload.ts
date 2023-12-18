@@ -79,6 +79,5 @@ export interface UnlikeReplyPayload {
 }
 
 export interface SearchPostPayload {
-  userId: string;
   keyword: string;
 }

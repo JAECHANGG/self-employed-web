@@ -1,13 +1,13 @@
+import { convertUserByKeywordToSortUpdatedAt } from "./../util/converter/user-converter";
 import { User } from "@/schemas/user";
 import { PostByIdDto } from "@/types/post/dto";
-import {
-  AddCollectionPayload,
-  DeleteSearchKeywordsAllPayload,
-  DeleteSearchKeywordPayload,
-} from "@/types/user/payload";
+import { GetSearchKeywordDto } from "@/types/user/dto";
 import { OAuthUser } from "@/types/user/oauth-user";
 import {
-  AddSearchKeywordPayload,
+  AddCollectionPayload,
+  CreateSearchKeywordPayload,
+  DeleteSearchKeywordPayload,
+  DeleteSearchKeywordAllPayload,
   GetSearchKeywordsPayload,
 } from "@/types/user/payload";
 import dbConnect from "@/util/database";
@@ -139,18 +139,41 @@ export async function deleteCollection(payload: AddCollectionPayload) {
 export async function createSearchKeyword({
   userId,
   keyword,
-}: AddSearchKeywordPayload) {
-  console.log("@@@@@@@@@@@@@@@@");
+}: CreateSearchKeywordPayload) {
   try {
-    const result = await User.findOneAndUpdate(
-      { socialId: userId },
-      {
-        $push: {
-          keywords: { keyword },
-        },
+    const existingKeyword = await User.findOne({
+      socialId: userId,
+      "keywords.keyword": keyword,
+    });
+
+    if (existingKeyword) {
+      await User.findOneAndUpdate(
+        { socialId: userId, "keywords.keyword": keyword },
+        {
+          $set: {
+            "keywords.$.keyword": keyword,
+          },
+        }
+      );
+    } else {
+      const user = await User.findOne({ socialId: userId });
+
+      if (user.keywords.length > 19) {
+        convertUserByKeywordToSortUpdatedAt(user.keywords);
+        user.keywords.pop();
+        await user.save();
       }
-    );
-    console.log("REWRWR#@R@#R@", result);
+
+      await User.findOneAndUpdate(
+        { socialId: userId },
+        {
+          $push: {
+            keywords: { keyword },
+          },
+        }
+      );
+    }
+
     return null;
   } catch (error) {
     throw error;
@@ -162,7 +185,7 @@ export async function getSearchKeyword({ userId }: GetSearchKeywordsPayload) {
 
   try {
     const result = await User.findOne({ socialId: userId });
-    return result.keywords;
+    return convertUserByKeywordToSortUpdatedAt(result.keywords);
   } catch (error) {
     console.log("searchKeyword를 찾을 수 없습니다.", error);
     return false;
@@ -189,8 +212,8 @@ export async function deleteSearchKeyword(payload: DeleteSearchKeywordPayload) {
   }
 }
 
-export async function deleteSearchKeywordsAll(
-  payload: DeleteSearchKeywordsAllPayload
+export async function deleteSearchKeywordAll(
+  payload: DeleteSearchKeywordAllPayload
 ) {
   const { userId } = payload;
   await dbConnect();

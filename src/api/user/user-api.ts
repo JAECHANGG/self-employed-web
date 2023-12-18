@@ -1,8 +1,9 @@
 import { GetSearchKeywordDto, UserDto } from "@/types/user/dto";
 import {
   AddCollectionPayload,
+  CreateSearchKeywordPayload,
   DeleteSearchKeywordPayload,
-  DeleteSearchKeywordsAllPayload,
+  DeleteSearchKeywordAllPayload,
   GetSearchKeywordsPayload,
   UpdateUserPayload,
 } from "@/types/user/payload";
@@ -15,8 +16,9 @@ enum UserApiUrl {
   AddCollection = "/user/collection",
   DeleteCollection = "/user/collection",
   GetSearchKeyword = "/user/keyword",
+  CreateSearchKeyword = "/user/keyword",
   DeleteSearchKeyword = "/user/keyword",
-  DeleteSearchKeywordsAll = "/user/keyword",
+  DeleteSearchKeywordAll = "/user/keyword",
 }
 
 class UserApi {
@@ -52,6 +54,12 @@ class UserApi {
     });
   }
 
+  async createSearchKeyword(
+    payload: CreateSearchKeywordPayload
+  ): Promise<null> {
+    return await this._api.post(`${UserApiUrl.CreateSearchKeyword}`, payload);
+  }
+
   async deleteSearchKeyword(
     payload: DeleteSearchKeywordPayload
   ): Promise<null> {
@@ -60,11 +68,11 @@ class UserApi {
     });
   }
 
-  async deleteSearchKeywordsAll(
-    payload: DeleteSearchKeywordsAllPayload
+  async deleteSearchKeywordAll(
+    payload: DeleteSearchKeywordAllPayload
   ): Promise<null> {
     return await this._api.patch(
-      `${UserApiUrl.DeleteSearchKeywordsAll}`,
+      `${UserApiUrl.DeleteSearchKeywordAll}`,
       payload
     );
   }

@@ -2,8 +2,9 @@ import { userApi } from "@/api/user/user-api";
 import { queryClient } from "@/app/provider";
 import { UserDto } from "@/types/user/dto";
 import {
+  CreateSearchKeywordPayload,
   DeleteSearchKeywordPayload,
-  DeleteSearchKeywordsAllPayload,
+  DeleteSearchKeywordAllPayload,
   GetSearchKeywordsPayload,
   UpdateUserPayload,
 } from "@/types/user/payload";
@@ -16,8 +17,9 @@ export enum UserQueryKey {
   AddCollection = "addCollection",
   DeleteCollection = "deleteCollection",
   GetSearchKeywords = "getSearchKeywords",
+  CreateSearchKeyword = "createSearchKeyword",
   DeleteSearchKeyword = "deleteSearchKeyword",
-  DeleteSearchKeywordsAll = "deleteSearchKeywordsAll",
+  DeleteSearchKeywordAll = "deleteSearchKeywordAll",
 }
 
 export const useGetUserQuery = () => {
@@ -126,6 +128,14 @@ export const useGetSearchKeywordsQuery = (
   });
 };
 
+export const useCreateSearchKeywordMutation = () => {
+  return useMutation({
+    mutationKey: [UserQueryKey.CreateSearchKeyword],
+    mutationFn: (payload: CreateSearchKeywordPayload) =>
+      userApi.createSearchKeyword(payload),
+  });
+};
+
 export const useDeleteSearchKeywordMutation = () => {
   return useMutation({
     mutationKey: [UserQueryKey.DeleteSearchKeyword],
@@ -137,11 +147,11 @@ export const useDeleteSearchKeywordMutation = () => {
   });
 };
 
-export const useDeleteSearchKeywordsAllMutation = () => {
+export const useDeleteSearchKeywordAllMutation = () => {
   return useMutation({
-    mutationKey: [UserQueryKey.DeleteSearchKeywordsAll],
-    mutationFn: (payload: DeleteSearchKeywordsAllPayload) =>
-      userApi.deleteSearchKeywordsAll(payload),
+    mutationKey: [UserQueryKey.DeleteSearchKeywordAll],
+    mutationFn: (payload: DeleteSearchKeywordAllPayload) =>
+      userApi.deleteSearchKeywordAll(payload),
     onSuccess: () => {
       queryClient.invalidateQueries([UserQueryKey.GetSearchKeywords]);
     },

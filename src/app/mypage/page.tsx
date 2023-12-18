@@ -20,6 +20,7 @@ export const metadata: Metadata = {
 
 const boardTitleMap: { [key: string]: boardComponent } = {
   "내 정보 보기": { id: "detail", icon: <ThumbUpAltIcon /> },
+  "내 컬렉션 보기": { id: "collections", icon: <ArticleIcon /> },
   "알림 설정": { id: "freeboard", icon: <ArticleIcon /> },
   version: { id: "knowhowboard", icon: <SchoolIcon /> },
   로그아웃: { id: "logout", icon: <CampaignIcon /> },

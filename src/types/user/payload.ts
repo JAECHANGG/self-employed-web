@@ -11,7 +11,7 @@ export interface DeleteCollectionPayload {
   userId: string;
 }
 
-export interface AddSearchKeywordPayload {
+export interface CreateSearchKeywordPayload {
   userId: string;
   keyword: string;
 }
@@ -25,6 +25,6 @@ export interface DeleteSearchKeywordPayload {
   keywordId: string;
 }
 
-export interface DeleteSearchKeywordsAllPayload {
+export interface DeleteSearchKeywordAllPayload {
   userId: string;
 }

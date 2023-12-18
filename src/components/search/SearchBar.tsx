@@ -1,40 +1,45 @@
 "use client";
 
-import { postApi } from "@/api/post/post-api";
 import { SearchValue } from "@/app/atom";
 import useDebounce from "@/hooks/debounce";
-import { useGetSearchPostsAllQuery } from "@/query/post-query";
+import { useFullSearchDialog } from "@/hooks/useFullSearchDialog";
+import { useCreateSearchKeywordMutation } from "@/query/user-query";
 import { useSession } from "next-auth/react";
-import React, { FormEvent, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { FormEvent, useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
 
 export default function SearchBar() {
   const { data: session } = useSession();
+  const router = useRouter();
   const [keyword, setKeyword] = useRecoilState(SearchValue);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  // useGetSearchPostsAllQuery({
-  //   userId: session?.user.id,
-  //   keyword,
-  // });
+  const { closeFullSearchDialog } = useFullSearchDialog();
+  const useCreateSearchKeyword = useCreateSearchKeywordMutation();
   const debouncedKeyword = useDebounce(keyword);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await postApi.getSearchPostsAll({
-        userId: session?.user.id || "",
-        keyword,
-      });
-      console.log(response);
-    } catch (error) {
-      console.log(error);
+    if (!keyword) {
+      console.log("검색어를 입력해주세요"); // TODO input validate 처리
+      return;
     }
+    useCreateSearchKeyword.mutate({
+      userId: session?.user?.id || "",
+      keyword: keyword,
+    });
+
+    closeFullSearchDialog();
+    router.push(`/search/${encodeURIComponent(keyword)}`);
   };
 
   useEffect(() => {
     if (inputRef.current !== null) {
       inputRef.current?.focus();
     }
+    return () => {
+      setKeyword("");
+    };
   }, []);
 
   return (

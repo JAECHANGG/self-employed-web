@@ -1,5 +1,6 @@
 "use client";
 
+import { Spinner } from "@/components/Spinner";
 import { useModal } from "@/hooks/useModal";
 import { useGetUserQuery, useUpdateUserMutation } from "@/query/user-query";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -66,7 +67,7 @@ export default function DetailPage() {
     // }
   }, [data]);
 
-  if (isLoading) return <div>loading...</div>;
+  if (isLoading) return <Spinner />;
 
   return (
     <div>

@@ -1,16 +1,16 @@
 import {
+  createSearchKeyword,
   deleteSearchKeyword,
-  deleteSearchKeywordsAll,
+  deleteSearchKeywordAll,
   getSearchKeyword,
 } from "@/service/user";
 import {
+  CreateSearchKeywordPayload,
   DeleteSearchKeywordPayload,
-  DeleteSearchKeywordsAllPayload,
+  DeleteSearchKeywordAllPayload,
 } from "@/types/user/payload";
 import { getBaseResponse, getErrorResponse } from "@/util/api-routes-util";
-import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
-import { authOptions } from "../../auth/[...nextauth]/route";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -19,6 +19,15 @@ export async function GET(request: NextRequest) {
   return getSearchKeyword({
     userId,
   })
+    .then((data) => getBaseResponse(data))
+    .catch((error) => getErrorResponse(error));
+}
+
+export async function POST(request: NextRequest) {
+  const createSearchKeywordPayload: CreateSearchKeywordPayload =
+    await request.json();
+
+  return createSearchKeyword(createSearchKeywordPayload)
     .then((data) => getBaseResponse(data))
     .catch((error) => getErrorResponse(error));
 }
@@ -39,10 +48,10 @@ export async function DELETE(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
-  const deleteSearchKeywordsAllPayload: DeleteSearchKeywordsAllPayload =
+  const deleteSearchKeywordAllPayload: DeleteSearchKeywordAllPayload =
     await request.json();
 
-  return deleteSearchKeywordsAll(deleteSearchKeywordsAllPayload)
+  return deleteSearchKeywordAll(deleteSearchKeywordAllPayload)
     .then((data) => getBaseResponse(data))
     .catch((error) => getErrorResponse(error));
 }

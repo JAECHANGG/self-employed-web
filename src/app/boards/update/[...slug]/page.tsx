@@ -5,10 +5,5 @@ interface Props {
 }
 
 export default function BoardUpdatePage({ params: { slug } }: Props) {
-  return (
-    <div>
-      {slug}
-      <BoardUpdate slug={slug[1]} />
-    </div>
-  );
+  return <BoardUpdate slug={slug[1]} />;
 }
