@@ -46,7 +46,7 @@ export default function CommentHeader({
       <div className="w-6 h-6 mr-2">
         <img src={user.image} alt="profile_image" className="rounded-full" />
       </div>
-      <div className="font-bold">{user.username}</div>
+      <div className="font-medium">{user.username}</div>
       <div className="ml-2 text-sm opacity-70 mr-2">
         {MMDDHHmmTime(createdAt)}
       </div>

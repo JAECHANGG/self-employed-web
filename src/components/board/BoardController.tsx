@@ -1,17 +1,29 @@
 "use client";
 
-import { queryClient } from "@/app/provider";
 import { PostQueryKey, useGetPostsByCategoryQuery } from "@/query/post-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { BoardContainer } from "./BoardContainer";
+import { InfiniteBoardContainer } from "./InfiniteBoardContainer";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 export const BoardController = () => {
+  const queryClient = useQueryClient();
   const pathname = usePathname();
   const category = pathname?.split("/")[2];
-  const { data: posts, isFetching } = useGetPostsByCategoryQuery(
-    category || ""
-  );
+  const {
+    data: posts,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useGetPostsByCategoryQuery(category || "");
+
+  const { observerElem } = useIntersectionObserver({
+    hasNextPage,
+    fetchNextPage,
+  });
 
   useEffect(() => {
     return () => {
@@ -23,10 +35,12 @@ export const BoardController = () => {
   }, []);
 
   return (
-    <BoardContainer
+    <InfiniteBoardContainer
       category={category || ""}
       posts={posts}
-      isFetching={isFetching}
+      isLoading={isLoading}
+      isFetchingNextPage={isFetchingNextPage}
+      observerElem={observerElem}
     />
   );
 };

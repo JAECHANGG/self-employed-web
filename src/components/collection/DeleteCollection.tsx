@@ -23,7 +23,7 @@ export default function DeleteCollection({ post, userId }: Props) {
   return (
     <span
       onClick={handleClickDeleteCollectionButton}
-      className="flex items-center justify-center text-sm"
+      className="flex items-center justify-center text-sm text-white"
     >
       <BookmarkIcon style={{ height: 20 }} />
     </span>

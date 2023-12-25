@@ -4,6 +4,7 @@ import {
   useDeleteSearchKeywordMutation,
   useDeleteSearchKeywordAllMutation,
   useGetSearchKeywordsQuery,
+  useCreateSearchKeywordMutation,
 } from "@/query/user-query";
 import { useSession } from "next-auth/react";
 import SearchIcon from "@mui/icons-material/Search";
@@ -13,14 +14,29 @@ import {
   DeleteSearchKeywordPayload,
   DeleteSearchKeywordAllPayload,
 } from "@/types/user/payload";
+import { useFullSearchDialog } from "@/hooks/useFullSearchDialog";
+import { useRouter } from "next/navigation";
 
 export const SearchKeyword = () => {
+  const router = useRouter();
   const { data: session } = useSession();
   const useGetSearchKeywords = useGetSearchKeywordsQuery({
     userId: session?.user?.id || "",
   });
   const deleteSearchKeyword = useDeleteSearchKeywordMutation();
   const deleteSearchKeywordAll = useDeleteSearchKeywordAllMutation();
+  const useCreateSearchKeyword = useCreateSearchKeywordMutation();
+  const { closeFullSearchDialog } = useFullSearchDialog();
+
+  const handleClickSearchKeyword = (keyword: string) => {
+    useCreateSearchKeyword.mutate({
+      userId: session?.user?.id || "",
+      keyword: keyword,
+    });
+
+    closeFullSearchDialog();
+    router.push(`/search/${encodeURIComponent(keyword)}`);
+  };
 
   const handleClickDeleteSearchKeyword = (keywordId: string) => {
     const payload: DeleteSearchKeywordPayload = {
@@ -66,7 +82,10 @@ export const SearchKeyword = () => {
             key={searchKeyword.id}
             className="flex justify-between items-center py-1"
           >
-            <div className="flex items-center">
+            <div
+              className="flex items-center"
+              onClick={() => handleClickSearchKeyword(searchKeyword.keyword)}
+            >
               <SearchIcon className="text-md mr-1" />
               <span className="text-lg">{searchKeyword.keyword}</span>
             </div>

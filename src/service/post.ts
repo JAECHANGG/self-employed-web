@@ -55,11 +55,13 @@ async function savePost(userObjectId: string, payload: CreatePostPayload) {
   }
 }
 
-export async function getAllPosts() {
+export async function getAllPosts(limit: number, offset: number) {
   await dbConnect();
 
   try {
-    const result = await Post.find({})
+    const result = await Post.find()
+      .limit(limit)
+      .skip(offset)
       .sort({ createdAt: -1 })
       .populate("user")
       .populate("like")
@@ -84,11 +86,17 @@ export async function getAllPosts() {
   }
 }
 
-export async function getPostsByCategory(category: string) {
+export async function getPostsByCategory(
+  category: string,
+  limit: number,
+  offset: number
+) {
   await dbConnect();
 
   try {
     const result = await Post.find({ category })
+      .limit(limit)
+      .skip(offset)
       .sort({ createdAt: -1 })
       .populate("user")
       .populate("like")
@@ -396,7 +404,11 @@ export async function unlikeReply(payload: UnlikeReplyPayload) {
   }
 }
 
-export async function getSearchPostsAll(payload: SearchPostPayload) {
+export async function getSearchPostsAll(
+  payload: SearchPostPayload,
+  limit: number,
+  offset: number
+) {
   await dbConnect();
 
   const { keyword } = payload;
@@ -407,9 +419,22 @@ export async function getSearchPostsAll(payload: SearchPostPayload) {
         { title: { $regex: keyword, $options: "i" } }, // 'i' 옵션은 대소문자를 구분하지 않음
         { content: { $regex: keyword, $options: "i" } },
       ],
-    });
+    })
+      .populate("user")
+      .limit(limit)
+      .skip(offset);
 
-    return posts;
+    return posts.map((post) => ({
+      id: post._id,
+      createdAt: post.createdAt,
+      title: post.title,
+      content: post.content,
+      username: post.user.username,
+      likeNumber: post.like.length,
+      commentNumber: post.comments.length,
+      view: post.view,
+      category: post.category,
+    }));
   } catch (error) {
     console.error("getSearchPostsAll error", error);
     throw error;

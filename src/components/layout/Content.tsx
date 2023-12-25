@@ -2,8 +2,9 @@
 
 import { ReactNode } from "react";
 import Modal from "../Modal";
-import BottomSheet from "../modal/BottomSheet";
+import Toast from "../Toast";
 import FullSearchDialog from "../full-dialog/FullSearchDialog";
+import BottomSheet from "../modal/BottomSheet";
 
 interface Props {
   children: ReactNode;
@@ -12,10 +13,11 @@ interface Props {
 export const Content = ({ children }: Props) => {
   return (
     <>
-      <main className="h-[90vh] relative overflow-y-auto">{children}</main>
+      <main className="h-full relative overflow-y-auto">{children}</main>
       <Modal />
       <BottomSheet />
       <FullSearchDialog />
+      <Toast />
     </>
   );
 };

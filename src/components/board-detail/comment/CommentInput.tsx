@@ -8,6 +8,8 @@ import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
+const textAreaPlaceholder = "댓글을 입력해주세요";
+
 interface Props {
   id: string;
   userObjectId: string;
@@ -90,11 +92,11 @@ export const CommentInput = ({
   }, [selectedCommentId]);
 
   return (
-    <section className="w-full bg-gray-100 flex items-center absolute bottom-0 ">
+    <section className="w-full bg-black flex items-center absolute bottom-0 ">
       <textarea
         ref={textareaRef}
-        className="w-full pl-4 pr-2 my-2 bg-gray-100 rounded-lg focus:outline-none overflow-hidden resize-none"
-        placeholder="댓글을 입력해주세요"
+        className="w-full pl-4 pr-2 my-2 bg-black rounded-lg focus:outline-none overflow-hidden resize-none text-white"
+        placeholder={textAreaPlaceholder}
         onChange={handleChangeComment}
         value={commentValue}
         rows={1}
@@ -106,9 +108,11 @@ export const CommentInput = ({
         }
       >
         {isLoading ? (
-          <CircularProgress style={{ height: 23, width: 23, color: "black" }} />
+          <CircularProgress
+            style={{ height: "23px", width: "23px", color: "white" }}
+          />
         ) : (
-          <SendOutlinedIcon style={{ height: 30 }} />
+          <SendOutlinedIcon className="h-[28px] w-[28px] text-white" />
         )}
       </div>
     </section>

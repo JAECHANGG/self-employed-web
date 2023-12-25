@@ -14,7 +14,7 @@ export default function Modal() {
             className="fixed top-0 left-0 flex flex-col justify-center items-center w-full h-full bg-neutral-800/70 z-50"
             onClick={closeModal}
           >
-            <div className="w-[75%] bg-white p-6 rounded-lg z-50">
+            <div className="w-[75%] bg-black p-6 rounded-lg z-50 text-white">
               <div className="mb-6">{modalState.message}</div>
               <div className="flex justify-end">
                 <button
@@ -24,7 +24,7 @@ export default function Modal() {
                   확인
                 </button>
                 <button
-                  className="ml-4 text-gray-700 text-sm"
+                  className="ml-4 text-sm text-light"
                   onClick={closeModal}
                 >
                   취소

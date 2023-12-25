@@ -5,7 +5,7 @@ interface Props {
 
 export default function CustomIconButton({ onClick, children }: Props) {
   return (
-    <button onClick={onClick} className={`bg-gray-100 rounded-md mr-1`}>
+    <button onClick={onClick} className={`mr-1`}>
       {children}
     </button>
   );

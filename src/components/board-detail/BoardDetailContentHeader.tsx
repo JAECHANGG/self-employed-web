@@ -29,7 +29,7 @@ export const BoardDetailContentHeader = ({ data, me }: Props) => {
   };
 
   return (
-    <section className="flex items-center justify-between">
+    <section className="flex items-center justify-between text-white">
       {deletePostMutation.isLoading && <Spinner />}
       <div className="flex flex-row">
         <header className="mr-3">
@@ -42,7 +42,7 @@ export const BoardDetailContentHeader = ({ data, me }: Props) => {
           </div>
         </header>
         <main className="flex flex-col">
-          <div className="font-bold">{user.username}</div>
+          <div className="font-medium">{user.username}</div>
           <div className="text-sm mt-1 opacity-70">
             {MMDDHHmmTime(createdAt)}
           </div>

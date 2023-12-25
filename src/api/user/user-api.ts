@@ -2,8 +2,8 @@ import { GetSearchKeywordDto, UserDto } from "@/types/user/dto";
 import {
   AddCollectionPayload,
   CreateSearchKeywordPayload,
-  DeleteSearchKeywordPayload,
   DeleteSearchKeywordAllPayload,
+  DeleteSearchKeywordPayload,
   GetSearchKeywordsPayload,
   UpdateUserPayload,
 } from "@/types/user/payload";

@@ -32,14 +32,14 @@ export const BoardContainer: React.FC<Props> = ({
         {posts?.map((data) => {
           return (
             <Link href={`/boards/${data.category}/${data.id}`} key={data.id}>
-              <div className="bg-white border-b-2 border-myColor-white-gray p-4 cursor-pointer">
-                <h1 className="text-xl font-bold truncate mb-3">
+              <div className="border-b-2 border-myColor-white-gray p-4 cursor-pointer">
+                <h1 className="text-xl font-bold truncate mb-3 text-white">
                   {data.title}
                 </h1>
-                <div className="text-base line-clamp-2 mb-3">
+                <div className="text-base line-clamp-2 mb-3 text-white">
                   {data.content}
                 </div>
-                <div className="flex items-center text-sm">
+                <div className="flex items-center text-sm text-white">
                   <span className="font-bold mr-2">{data.username}</span>
                   <span>{HHmmTime(data.createdAt)}</span>
                   <span className="text-red-500 ml-2 flex items-center">

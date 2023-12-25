@@ -34,17 +34,15 @@ export default function MyPage() {
         <li key={title}>
           <Link
             href={`/mypage/${boardTitleMap[title].id}`}
-            className="flex items-center justify-between mb-1 h-16 px-4 rounded-lg cursor-pointer"
+            className="flex items-center justify-between mb-1 h-16 px-4 rounded-lg cursor-pointe text-white"
           >
             <div className="flex items-center">
-              <div className="bg-blue-100 p-2 rounded-lg">
-                {boardTitleMap[title].icon}
-              </div>
+              <div className="p-2 rounded-lg">{boardTitleMap[title].icon}</div>
               <div className="text-base ml-2">{title}</div>
             </div>
             <div className="flex">
               <div className="flex items-center justify-center">
-                <ChevronRightIcon style={{ color: "#012851" }} />
+                <ChevronRightIcon />
               </div>
             </div>
           </Link>

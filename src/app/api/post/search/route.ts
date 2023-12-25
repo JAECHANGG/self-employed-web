@@ -5,10 +5,19 @@ import { NextRequest } from "next/server";
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const keyword = searchParams.get("keyword") || "";
+  const page = Number(searchParams.get("page")) || 0;
+  const limit = 5;
+  let offset = (page - 1) * limit;
 
-  return getSearchPostsAll({
-    keyword,
-  })
+  console.log("searchParams", searchParams);
+
+  return getSearchPostsAll(
+    {
+      keyword,
+    },
+    limit,
+    offset
+  )
     .then((data) => getBaseResponse(data))
     .catch((error) => getErrorResponse(error));
 }

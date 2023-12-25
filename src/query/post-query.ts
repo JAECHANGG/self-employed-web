@@ -1,5 +1,4 @@
 import { postApi } from "@/api/post/post-api";
-import { queryClient } from "@/app/provider";
 import { CommentDto, PostByIdDto } from "@/types/post/dto";
 import {
   CreateCommentPayload,
@@ -18,7 +17,12 @@ import {
   UpdatePostPayload,
 } from "@/types/post/payload";
 import { UserDto } from "@/types/user/dto";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 export enum PostQueryKey {
   GetAllPosts = "GetAllPosts",
@@ -42,10 +46,17 @@ export enum PostQueryKey {
 }
 
 export const useGetAllPostsQuery = () => {
-  return useQuery({
-    queryKey: [PostQueryKey.GetAllPosts],
-    queryFn: () => postApi.getAllPosts(),
-  });
+  return useInfiniteQuery(
+    [PostQueryKey.GetAllPosts],
+    ({ pageParam = 1 }) => postApi.getAllPosts(pageParam),
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        console.log(allPages.length);
+        const nextPage = allPages.length + 1;
+        return lastPage.length === 0 ? undefined : nextPage;
+      },
+    }
+  );
 };
 
 export const useGetPostByIdQuery = (id: string) => {
@@ -56,10 +67,17 @@ export const useGetPostByIdQuery = (id: string) => {
 };
 
 export const useGetPostsByCategoryQuery = (category: string) => {
-  return useQuery({
-    queryKey: [PostQueryKey.GetPostsByCategory, category],
-    queryFn: () => postApi.getPostsByCategory(category),
-  });
+  return useInfiniteQuery(
+    [PostQueryKey.GetPostsByCategory, category],
+    ({ pageParam = 1 }) => postApi.getPostsByCategory(category, pageParam),
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        console.log(allPages.length);
+        const nextPage = allPages.length + 1;
+        return lastPage.length === 0 ? undefined : nextPage;
+      },
+    }
+  );
 };
 
 export const useCreatePostMutation = () => {
@@ -83,6 +101,7 @@ export const useUpdatePostMutation = () => {
 };
 
 export const useCreateCommentMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [PostQueryKey.CreateComment],
     mutationFn: (payload: CreateCommentPayload) =>
@@ -105,6 +124,7 @@ export const useDeletePostMutation = () => {
 };
 
 export const useLikePostMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [PostQueryKey.LikePost],
     mutationFn: (payload: LikePostPayload) => postApi.likePost(payload),
@@ -143,6 +163,7 @@ export const useLikePostMutation = () => {
 };
 
 export const useUnlikePostMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [PostQueryKey.UnlikePost],
     mutationFn: (payload: UnlikePostPayload) => postApi.unlikePost(payload),
@@ -181,6 +202,7 @@ export const useUnlikePostMutation = () => {
 };
 
 export const useLikeCommentMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [PostQueryKey.LikeComment],
     mutationFn: (payload: LikeCommentPayload) => postApi.likeComment(payload),
@@ -228,6 +250,7 @@ export const useLikeCommentMutation = () => {
 };
 
 export const useUnlikeCommentMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [PostQueryKey.UnlikeComment],
     mutationFn: (payload: UnlikeCommentPayload) =>
@@ -281,6 +304,7 @@ export const useUnlikeCommentMutation = () => {
 };
 
 export const useDeleteCommentMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [PostQueryKey.DeleteComment],
     mutationFn: (payload: DeleteCommentPayload) =>
@@ -293,6 +317,7 @@ export const useDeleteCommentMutation = () => {
 };
 
 export const useIncreaseViewMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [PostQueryKey.IncreaseView],
     mutationFn: (payload: IncreaseViewPayload) => postApi.increaseView(payload),
@@ -332,6 +357,7 @@ export const useIncreaseViewMutation = () => {
 };
 
 export const useCreateReplyMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [PostQueryKey.CreateReply],
     mutationFn: (payload: CreateReplyPayload) => postApi.createReply(payload),
@@ -343,6 +369,7 @@ export const useCreateReplyMutation = () => {
 };
 
 export const useDeleteReplyMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [PostQueryKey.DeleteReply],
     mutationFn: (payload: DeleteReplyPayload) => postApi.deleteReply(payload),
@@ -354,6 +381,7 @@ export const useDeleteReplyMutation = () => {
 };
 
 export const useLikeReplyMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [PostQueryKey.LikeReply],
     mutationFn: (payload: LikeReplyPayload) => postApi.likeReply(payload),
@@ -409,6 +437,7 @@ export const useLikeReplyMutation = () => {
 };
 
 export const useUnlikeReplyMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [PostQueryKey.UnlikeReply],
     mutationFn: (payload: UnlikeReplyPayload) => postApi.unlikeReply(payload),
@@ -469,9 +498,16 @@ export const useUnlikeReplyMutation = () => {
 };
 
 export const useGetSearchPostsAllQuery = (payload: SearchPostPayload) => {
-  return useQuery({
+  return useInfiniteQuery(
     // enabled: payload.userId && payload.keyword,
-    queryKey: [PostQueryKey.SearchPostsAll],
-    queryFn: () => postApi.getSearchPostsAll(payload),
-  });
+    [PostQueryKey.SearchPostsAll],
+    ({ pageParam = 1 }) => postApi.getSearchPostsAll(payload, pageParam),
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        console.log(allPages.length);
+        const nextPage = allPages.length + 1;
+        return lastPage.length === 0 ? undefined : nextPage;
+      },
+    }
+  );
 };

@@ -1,15 +1,14 @@
 import { userApi } from "@/api/user/user-api";
-import { queryClient } from "@/app/provider";
 import { UserDto } from "@/types/user/dto";
 import {
   CreateSearchKeywordPayload,
-  DeleteSearchKeywordPayload,
   DeleteSearchKeywordAllPayload,
+  DeleteSearchKeywordPayload,
   GetSearchKeywordsPayload,
   UpdateUserPayload,
 } from "@/types/user/payload";
 import { AddCollection, DeleteCollection } from "@/types/user/user";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export enum UserQueryKey {
   GetUser = "getUser",
@@ -30,6 +29,7 @@ export const useGetUserQuery = () => {
 };
 
 export const useUpdateUserMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [UserQueryKey.UpdateUser],
     mutationFn: (payload: UpdateUserPayload) => userApi.update(payload),
@@ -40,6 +40,7 @@ export const useUpdateUserMutation = () => {
 };
 
 export const useAddCollectionMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [UserQueryKey.AddCollection],
     mutationFn: ({ post, userId }: AddCollection) =>
@@ -77,6 +78,7 @@ export const useAddCollectionMutation = () => {
 };
 
 export const useDeleteCollectionMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [UserQueryKey.DeleteCollection],
     mutationFn: ({ post, userId }: DeleteCollection) =>
@@ -137,6 +139,7 @@ export const useCreateSearchKeywordMutation = () => {
 };
 
 export const useDeleteSearchKeywordMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [UserQueryKey.DeleteSearchKeyword],
     mutationFn: (payload: DeleteSearchKeywordPayload) =>
@@ -148,6 +151,7 @@ export const useDeleteSearchKeywordMutation = () => {
 };
 
 export const useDeleteSearchKeywordAllMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: [UserQueryKey.DeleteSearchKeywordAll],
     mutationFn: (payload: DeleteSearchKeywordAllPayload) =>

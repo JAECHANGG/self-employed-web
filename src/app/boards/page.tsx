@@ -31,10 +31,10 @@ const BoardsPage = () => {
           <li key={title}>
             <Link
               href={`/boards/${boardTitleMap[title].id}`}
-              className="flex items-center justify-between mb-1 h-16 px-4 rounded-lg cursor-pointer"
+              className="flex items-center justify-between mb-1 h-16 px-4 rounded-lg cursor-pointer text-white"
             >
-              <div className="flex items-center">
-                <div className="bg-blue-100 p-2 rounded-lg">
+              <div className="flex items-center ">
+                <div className="p-2 rounded-lg">
                   {boardTitleMap[title].icon}
                 </div>
                 <div className="text-base ml-2">{title}</div>

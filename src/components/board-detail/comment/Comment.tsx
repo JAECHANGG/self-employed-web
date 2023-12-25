@@ -28,10 +28,10 @@ export const Comment = ({
         const isLike = like.map((likeUser) => likeUser.id).includes(me.id);
 
         return (
-          <div className="flex flex-col mb-2" key={id}>
+          <div className="flex flex-col mb-2 text-white" key={id}>
             <div
               className={`flex flex-col px-4 py-3 ${
-                selectedCommentId === id && "bg-blue-50"
+                selectedCommentId === id && "bg-gray-900"
               }`}
             >
               <CommentHeader
@@ -61,13 +61,10 @@ export const Comment = ({
                     likeNumber={like.length}
                   />
                 )}
-                {/* <span className="mr-2 text-red-600">
-                <FavoriteBorderIcon style={{ height: 17 }} /> {like.length}
-              </span> */}
                 <span className="text-blue-700">
                   <ChatBubbleOutlineOutlinedIcon style={{ height: 17 }} />
-                  {replies.length}
                 </span>
+                {replies.length}
               </div>
             </div>
 

@@ -1,10 +1,11 @@
 import { getUserById, updateUser } from "@/service/user";
 import { UpdateUserPayload } from "@/types/user/payload";
+import { getBaseResponse, getErrorResponse } from "@/util/api-routes-util";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/route";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);
   const user = session?.user;
   if (!user) {
@@ -32,9 +33,7 @@ export async function PATCH(request: NextRequest) {
   }
 
   // return updateUser(user.id, text, file).then((data) => NextResponse.json(data));
-  return updateUser(user.id, username).then((data) =>
-    data
-      ? new Response("Good Response", { status: 200 })
-      : new Response("Bad Response", { status: 500 })
-  );
+  return updateUser(user.id, username)
+    .then((data) => getBaseResponse(data))
+    .catch((error) => getErrorResponse(error));
 }

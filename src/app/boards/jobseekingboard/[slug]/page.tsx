@@ -1,4 +1,4 @@
-import { BoardDetailContainer } from "@/components/board-detail/BoardDetailContainer";
+import { BoardDetailController } from "@/components/board-detail/BoardDetailController";
 
 interface Props {
   params: { slug: string };
@@ -7,5 +7,5 @@ interface Props {
 export default function JobseekingBoardDetailPage({
   params: { slug: id },
 }: Props) {
-  return <BoardDetailContainer id={id} />;
+  return <BoardDetailController id={id} />;
 }

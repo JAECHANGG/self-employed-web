@@ -46,16 +46,21 @@ class PostApi {
     this._api = api;
   }
 
-  async getAllPosts(): Promise<PostByCategoryDto[]> {
-    return await this._api.get(`${PostApiUrl.GetAllPosts}`);
+  async getAllPosts(page: number): Promise<PostByCategoryDto[]> {
+    return await this._api.get(`${PostApiUrl.GetAllPosts}?page=${page}`);
   }
 
   async getPostById(id: string): Promise<PostByIdDto> {
     return await this._api.get(`${PostApiUrl.GetPostById}/${id}`);
   }
 
-  async getPostsByCategory(category: string): Promise<PostByCategoryDto[]> {
-    return await this._api.get(`${PostApiUrl.GetPostsByCategory}/${category}`);
+  async getPostsByCategory(
+    category: string,
+    page: number
+  ): Promise<PostByCategoryDto[]> {
+    return await this._api.get(
+      `${PostApiUrl.GetPostsByCategory}/${category}?page=${page}`
+    );
   }
 
   async create(payload: CreatePostPayload): Promise<PostIdDto> {
@@ -119,9 +124,10 @@ class PostApi {
   }
 
   async getSearchPostsAll(
-    payload: SearchPostPayload
+    payload: SearchPostPayload,
+    page: number
   ): Promise<PostByCategoryDto[]> {
-    return await this._api.get(`${PostApiUrl.SearchPostsAll}`, {
+    return await this._api.get(`${PostApiUrl.SearchPostsAll}?page=${page}`, {
       params: payload,
     });
   }

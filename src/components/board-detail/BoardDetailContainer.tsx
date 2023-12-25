@@ -4,9 +4,10 @@ import {
   useGetPostByIdQuery,
   useIncreaseViewMutation,
 } from "@/query/post-query";
-import { useGetUserQuery } from "@/query/user-query";
+import { UserQueryKey, useGetUserQuery } from "@/query/user-query";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { Spinner } from "../Spinner";
 import AddCollection from "../collection/AddCollection";
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export const BoardDetailContainer = ({ id }: Props) => {
+  const queryClient = useQueryClient();
   const { data, isLoading } = useGetPostByIdQuery(id);
   const { data: me } = useGetUserQuery();
   const enabled = useRef(true);
@@ -38,6 +40,12 @@ export const BoardDetailContainer = ({ id }: Props) => {
     });
     enabled.current = false;
   }, [data]);
+
+  useEffect(() => {
+    return () => {
+      queryClient.invalidateQueries([UserQueryKey.GetUser]);
+    };
+  }, []);
 
   if (isLoading) {
     return <Spinner />;
@@ -56,10 +64,10 @@ export const BoardDetailContainer = ({ id }: Props) => {
         <header className="mb-5">
           <BoardDetailContentHeader data={data} me={me?.id || ""} />
         </header>
-        <h1 className="font-bold text-2xl mb-5">{data.title}</h1>
-        <span className="mb-10">{data.content}</span>
+        <h1 className="font-bold text-2xl mb-5 text-white">{data.title}</h1>
+        <span className="mb-10 text-white">{data.content}</span>
         <footer className="flex justify-between">
-          <div className="flex items-center">
+          <div className="flex items-center text-white">
             {isLike ? (
               <UnlikePost
                 postId={data.id}
@@ -91,7 +99,6 @@ export const BoardDetailContainer = ({ id }: Props) => {
           </div>
         </footer>
       </main>
-      <div className="bg-myColor-white-gray w-full py-2" />
       <footer className=" pb-8">
         <Comment
           me={me}

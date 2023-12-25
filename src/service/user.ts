@@ -1,19 +1,26 @@
-import { convertUserByKeywordToSortUpdatedAt } from "./../util/converter/user-converter";
 import { User } from "@/schemas/user";
 import { PostByIdDto } from "@/types/post/dto";
-import { GetSearchKeywordDto } from "@/types/user/dto";
 import { OAuthUser } from "@/types/user/oauth-user";
 import {
   AddCollectionPayload,
   CreateSearchKeywordPayload,
-  DeleteSearchKeywordPayload,
   DeleteSearchKeywordAllPayload,
+  DeleteSearchKeywordPayload,
   GetSearchKeywordsPayload,
 } from "@/types/user/payload";
 import dbConnect from "@/util/database";
+import { convertUserByKeywordToSortUpdatedAt } from "./../util/converter/user-converter";
 
 export async function updateUser(userId: string, username: string) {
   await dbConnect();
+
+  const existingUser = await User.findOne({
+    username,
+  });
+
+  if (existingUser) {
+    throw new Error("이미 존재하는 닉네임입니다");
+  }
 
   try {
     await User.findOneAndUpdate(
@@ -24,10 +31,10 @@ export async function updateUser(userId: string, username: string) {
         username,
       }
     );
-    return true;
+    return null;
   } catch (error) {
     console.log("updateUser fail:", error);
-    return false;
+    throw error;
   }
 }
 
@@ -66,6 +73,7 @@ export async function getUserById(socialId: string) {
       createdAt: post.createdAt,
       title: post.title,
       content: post.content,
+      category: post.category,
       username: post.user.username,
       likeNumber: post.like.length,
       commentNumber: post.comments.length,

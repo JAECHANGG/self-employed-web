@@ -1,18 +1,31 @@
 "use client";
 
-import { queryClient } from "@/app/provider";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { PostQueryKey, useGetSearchPostsAllQuery } from "@/query/post-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { BoardContainer } from "../board/BoardContainer";
+import { InfiniteBoardContainer } from "../board/InfiniteBoardContainer";
 
 interface Props {
   keyword: string;
 }
 
 export const SearchAllController = ({ keyword }: Props) => {
-  const { data: searchAllPosts, isFetching } = useGetSearchPostsAllQuery({
-    keyword,
+  const {
+    data: searchAllPosts,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useGetSearchPostsAllQuery({ keyword });
+
+  const { observerElem } = useIntersectionObserver({
+    hasNextPage,
+    fetchNextPage,
   });
+  const queryClient = useQueryClient();
+
+  console.log(searchAllPosts);
 
   useEffect(() => {
     return () => {
@@ -21,10 +34,12 @@ export const SearchAllController = ({ keyword }: Props) => {
   }, []);
 
   return (
-    <BoardContainer
+    <InfiniteBoardContainer
       category={""}
       posts={searchAllPosts}
-      isFetching={isFetching}
+      isLoading={isLoading}
+      isFetchingNextPage={isFetchingNextPage}
+      observerElem={observerElem}
     />
   );
 };

@@ -7,8 +7,8 @@ export const SearchIconContainer = () => {
   const { openFullSearchDialog } = useFullSearchDialog();
 
   return (
-    <div className="absolute right-2" onClick={openFullSearchDialog}>
-      <SearchIcon />
+    <div className="absolute right-2 text-white" onClick={openFullSearchDialog}>
+      <SearchIcon className="h-7 w-7" />
     </div>
   );
 };

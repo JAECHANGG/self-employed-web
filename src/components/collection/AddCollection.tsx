@@ -23,7 +23,7 @@ export default function AddCollection({ post, userId }: Props) {
   return (
     <span
       onClick={handleClickPostCollectionButton}
-      className="flex items-center justify-center text-sm"
+      className="flex items-center justify-center text-sm text-white"
     >
       <BookmarkBorderIcon style={{ height: 20 }} />
     </span>

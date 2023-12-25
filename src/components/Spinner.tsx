@@ -1,9 +1,17 @@
 import CircularProgress from "@mui/material/CircularProgress";
 
-export const Spinner = () => {
+interface Props {
+  scroll?: boolean;
+}
+
+export const Spinner = ({ scroll = false }: Props) => {
   return (
-    <div className="absolute inset-0 flex justify-center items-center bg-black opacity-25">
-      <CircularProgress style={{ color: "pink" }} />
+    <div
+      className={`flex justify-center items-center ${
+        !scroll ? "absolute inset-0 bg-transparent" : "py-20"
+      }`}
+    >
+      <CircularProgress size={!scroll ? 40 : 30} style={{ color: "white" }} />
     </div>
   );
 };

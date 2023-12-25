@@ -1,17 +1,18 @@
 "use client";
 
-import { queryClient } from "@/app/provider";
-import { PostQueryKey, useGetPostsByCategoryQuery } from "@/query/post-query";
-import { useEffect } from "react";
-import { BoardContainer } from "../../board/BoardContainer";
 import { SearchValue } from "@/app/atom";
+import { PostQueryKey, useGetPostsByCategoryQuery } from "@/query/post-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useRecoilState } from "recoil";
+import { BoardContainer } from "../../board/BoardContainer";
 
 interface Props {
   category: string;
 }
 
 export const SearchBoardController = ({ category }: Props) => {
+  const queryClient = useQueryClient();
   const [keyword, setKeyword] = useRecoilState(SearchValue);
   const { data: posts, isFetching } = useGetPostsByCategoryQuery(
     category || ""

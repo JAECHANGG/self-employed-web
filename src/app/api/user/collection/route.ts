@@ -1,8 +1,5 @@
 import { addCollection, deleteCollection } from "@/service/user";
-import {
-  AddCollectionPayload,
-  DeleteCollectionPayload,
-} from "@/types/user/payload";
+import { AddCollectionPayload } from "@/types/user/payload";
 import { getBaseResponse, getErrorResponse } from "@/util/api-routes-util";
 import { NextRequest } from "next/server";
 

@@ -1,51 +1,54 @@
 "use client";
 
-import React from "react";
-import "./bottom-navigate.css";
-import HomeIcon from "@mui/icons-material/Home";
-import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import SettingsIcon from "@mui/icons-material/Settings";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlined";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import AccountBoxOutlinedIcon from "@mui/icons-material/AccountBoxOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import HomeIcon from "@mui/icons-material/Home";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
+import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
+import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlined";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import "./bottom-navigate.css";
+
+const iconSize = "w-7 h-7";
 
 const menu = [
-  { href: "/home", icon: <HomeOutlinedIcon />, clickedIcon: <HomeIcon /> },
+  {
+    href: "/home",
+    icon: <HomeOutlinedIcon className={iconSize} />,
+    clickedIcon: <HomeIcon className={iconSize} />,
+  },
   {
     href: "/boards",
-    icon: <SpaceDashboardOutlinedIcon />,
-    clickedIcon: <SpaceDashboardIcon />,
+    icon: <SpaceDashboardOutlinedIcon className={iconSize} />,
+    clickedIcon: <SpaceDashboardIcon className={iconSize} />,
   },
   {
     href: "/notifications",
-    icon: <NotificationsOutlinedIcon />,
-    clickedIcon: <NotificationsIcon />,
+    icon: <NotificationsOutlinedIcon className={iconSize} />,
+    clickedIcon: <NotificationsIcon className={iconSize} />,
   },
   {
     href: "/mypage",
-    icon: <AccountBoxOutlinedIcon />,
-    clickedIcon: <AccountBoxIcon />,
+    icon: <AccountBoxOutlinedIcon className={iconSize} />,
+    clickedIcon: <AccountBoxIcon className={iconSize} />,
   },
-  {
-    href: "/settings",
-    icon: <SettingsOutlinedIcon />,
-    clickedIcon: <SettingsIcon />,
-  },
+  // {
+  //   href: "/settings",
+  //   icon: <SettingsOutlinedIcon />,
+  //   clickedIcon: <SettingsIcon />,
+  // },
 ];
 
 export const BottomNavigate = () => {
   const pathname = usePathname();
 
   return (
-    <footer className="h-[5vh] pt-4 pb-8 border-t-2 border-gray-200 flex items-center">
+    <footer className="h-fit py-3 border-t-[1px] border-gray-200 flex justify-evenly items-center">
       {menu.map(({ href, icon, clickedIcon }) => (
-        <Link key={href} href={href} className="app-box">
+        <Link key={href} href={href} className="app-box text-white">
           {pathname === href ? clickedIcon : icon}
         </Link>
       ))}

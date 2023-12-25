@@ -4,7 +4,12 @@ import { NextRequest } from "next/server";
 import { createPost, getAllPosts, updatePost } from "../../../service/post";
 
 export async function GET(request: NextRequest) {
-  return getAllPosts()
+  const { searchParams } = new URL(request.url);
+  const page = Number(searchParams.get("page")) || 0;
+  const limit = 5;
+  let offset = (page - 1) * limit;
+
+  return getAllPosts(limit, offset)
     .then((data) => getBaseResponse(data))
     .catch((error) => getErrorResponse(error));
 }
