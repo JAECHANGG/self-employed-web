@@ -5,7 +5,6 @@ import { PostQueryKey, useGetPostsByCategoryQuery } from "@/query/post-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { BoardContainer } from "../../board/BoardContainer";
 
 interface Props {
   category: string;
@@ -18,10 +17,6 @@ export const SearchBoardController = ({ category }: Props) => {
     category || ""
   );
 
-  const filterPosts = posts?.filter(
-    (post) => post.title.includes(keyword) || post.content.includes(keyword)
-  );
-
   useEffect(() => {
     return () => {
       queryClient.invalidateQueries([
@@ -32,10 +27,11 @@ export const SearchBoardController = ({ category }: Props) => {
   }, []);
 
   return (
-    <BoardContainer
-      category={category || ""}
-      posts={filterPosts}
-      isFetching={isFetching}
-    />
+    // <BoardContainer
+    //   category={category || ""}
+    //   posts={filterPosts}
+    //   isFetching={isFetching}
+    // />
+    null
   );
 };

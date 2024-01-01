@@ -44,7 +44,8 @@ export const InfiniteBoardContainer: React.FC<Props> = ({
                   href={`/boards/${data.category}/${data.id}`}
                   key={data.id}
                 >
-                  <div className="border-b-2 border-myColor-white-gray p-4 cursor-pointer">
+                  {/* <div className="border-b-2 border-myColor-white-gray p-4 cursor-pointer"> */}
+                  <div className="p-4 cursor-pointer">
                     <h1 className="text-xl font-bold truncate mb-3 text-white">
                       {data.title}
                     </h1>

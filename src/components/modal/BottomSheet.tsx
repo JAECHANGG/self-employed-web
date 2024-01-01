@@ -1,6 +1,9 @@
-import React from "react";
-import ModalPortal from "../ModalPortal";
 import { useBottomSheet } from "@/hooks/useBottomSheet";
+import CloseSharpIcon from "@mui/icons-material/CloseSharp";
+import { Drawer } from "@mui/material";
+import React from "react";
+
+const drawerDirection = "bottom";
 
 interface boardComponent {
   id: string;
@@ -10,33 +13,51 @@ interface boardComponent {
 export default function BottomSheet() {
   const { bottomSheetState, closeBottomSheet } = useBottomSheet();
 
+  const stopPropagation = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  };
+
   return (
     <>
-      {bottomSheetState.isOpen && (
-        <ModalPortal>
-          <section className="fixed top-0 left-0 flex flex-col justify-center items-center w-full h-full bg-neutral-800/70 z-50">
-            <div
-              className={`absolute bottom-0 h-auto w-full p-4 bg-white border-t border-slate-300 rounded-tl-2xl rounded-tr-2xl overflow-hidden
-      transition-transform duration-300 ease-in-out transform ${
-        bottomSheetState.isOpen ? "translate-y-0" : "translate-x-0"
-      }`}
+      {
+        <section
+          className={`${bottomSheetState.isOpen ? "visible" : "hidden"} `}
+          onClick={closeBottomSheet}
+        >
+          <React.Fragment key={drawerDirection}>
+            <Drawer
+              anchor={drawerDirection}
+              open={bottomSheetState.isOpen}
+              onClose={closeBottomSheet}
+              PaperProps={{
+                style: {
+                  background: "transparent",
+                },
+              }}
             >
-              <h1 className="text-2xl font-bold mb-2">
-                {bottomSheetState.title}
-                <span onClick={closeBottomSheet}>-X</span>
-              </h1>
-              {/* <ul>
-                {Object.keys(contents).map((content) => (
-                  <li key={content} className="text-lg py-1 cursor-pointer">
-                    {content}
-                  </li>
-                ))}
-              </ul> */}
-              {bottomSheetState.children}
-            </div>
-          </section>
-        </ModalPortal>
-      )}
+              <div className="h-auto w-full py-4 bg-[#292929] border-t border-slate-800 rounded-tl-2xl rounded-tr-2xl overflow-hidden text-white">
+                <div className="flex justify-center items-center mb-2">
+                  <div className="h-1 w-10 bg-gray-500 rounded-lg" />
+                </div>
+                <div
+                  className="flex justify-between items-center mb-2  px-4"
+                  onClick={stopPropagation}
+                >
+                  <h1 className="flex justify-between text-xl font-medium">
+                    {bottomSheetState.title}
+                  </h1>
+                  <CloseSharpIcon
+                    className="w-8 h-8"
+                    onClick={closeBottomSheet}
+                  />
+                </div>
+                <div className="bg-gray-500 w-full h-[1px] opacity-30 mb-2" />
+                <div className="px-4">{bottomSheetState.children}</div>
+              </div>
+            </Drawer>
+          </React.Fragment>
+        </section>
+      }
     </>
   );
 }

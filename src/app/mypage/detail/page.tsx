@@ -5,6 +5,7 @@ import { Spinner } from "@/components/Spinner";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { useGetUserQuery, useUpdateUserMutation } from "@/query/user-query";
+import { BaseError } from "@/types/base-error";
 import { ChangeEvent, useEffect, useState } from "react";
 
 export default function DetailPage() {
@@ -50,7 +51,8 @@ export default function DetailPage() {
       { username },
       {
         onError: (error) => {
-          openToast({ message: error?.response?.data.error });
+          const baseError = error as BaseError;
+          openToast({ message: baseError.response.data.error });
         },
       }
     );
@@ -103,7 +105,7 @@ export default function DetailPage() {
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
         />
-        <div className="text-sm">{username.length}/20</div>
+        <div className="text-sm text-white">{username.length}/20</div>
       </div>
       <CustomTextButton
         text="확인"

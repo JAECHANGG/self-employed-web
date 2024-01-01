@@ -1,21 +1,21 @@
 "use client";
 
-import {
-  useDeleteSearchKeywordMutation,
-  useDeleteSearchKeywordAllMutation,
-  useGetSearchKeywordsQuery,
-  useCreateSearchKeywordMutation,
-} from "@/query/user-query";
-import { useSession } from "next-auth/react";
-import SearchIcon from "@mui/icons-material/Search";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { Spinner } from "../Spinner";
-import {
-  DeleteSearchKeywordPayload,
-  DeleteSearchKeywordAllPayload,
-} from "@/types/user/payload";
 import { useFullSearchDialog } from "@/hooks/useFullSearchDialog";
+import {
+  useCreateSearchKeywordMutation,
+  useDeleteSearchKeywordAllMutation,
+  useDeleteSearchKeywordMutation,
+  useGetSearchKeywordsQuery,
+} from "@/query/user-query";
+import {
+  DeleteSearchKeywordAllPayload,
+  DeleteSearchKeywordPayload,
+} from "@/types/user/payload";
+import CloseIcon from "@mui/icons-material/Close";
+import SearchIcon from "@mui/icons-material/Search";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Spinner } from "../Spinner";
 
 export const SearchKeyword = () => {
   const router = useRouter();
@@ -71,7 +71,7 @@ export const SearchKeyword = () => {
   console.log(useGetSearchKeywords.data);
 
   return (
-    <section className="p-4 h-full">
+    <section className="p-4 h-full bg-black text-white">
       <header className="flex justify-between items-center mb-1">
         <h1 className="font-semibold">최근 검색</h1>
         <span onClick={handleClickDeleteSearchKeywordAll}>전체 삭제</span>
@@ -80,19 +80,21 @@ export const SearchKeyword = () => {
         {useGetSearchKeywords.data?.map((searchKeyword) => (
           <li
             key={searchKeyword.id}
-            className="flex justify-between items-center py-1"
+            className="flex justify-between items-center py-1 text-[#ffffffe0]"
           >
             <div
               className="flex items-center"
               onClick={() => handleClickSearchKeyword(searchKeyword.keyword)}
             >
-              <SearchIcon className="text-md mr-1" />
-              <span className="text-lg">{searchKeyword.keyword}</span>
+              <SearchIcon className="text-md mr-1  " />
+              <span className="text-lg font-light">
+                {searchKeyword.keyword}
+              </span>
             </div>
             <div
               onClick={() => handleClickDeleteSearchKeyword(searchKeyword.id)}
             >
-              <DeleteOutlineIcon />
+              <CloseIcon />
             </div>
           </li>
         ))}

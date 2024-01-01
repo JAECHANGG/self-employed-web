@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: "나의 정보를 확인 및 수정",
 };
 
-const boardTitleMap: { [key: string]: boardComponent } = {
+const myPageMap: { [key: string]: boardComponent } = {
   "내 정보 보기": { id: "detail", icon: <ThumbUpAltIcon /> },
   "내 컬렉션 보기": { id: "collections", icon: <ArticleIcon /> },
   "알림 설정": { id: "freeboard", icon: <ArticleIcon /> },
@@ -30,14 +30,14 @@ const boardTitleMap: { [key: string]: boardComponent } = {
 export default function MyPage() {
   return (
     <ul className="space-y-1 py-4">
-      {Object.keys(boardTitleMap).map((title, index) => (
+      {Object.keys(myPageMap).map((title, index) => (
         <li key={title}>
           <Link
-            href={`/mypage/${boardTitleMap[title].id}`}
+            href={`/mypage/${myPageMap[title].id}`}
             className="flex items-center justify-between mb-1 h-16 px-4 rounded-lg cursor-pointe text-white"
           >
             <div className="flex items-center">
-              <div className="p-2 rounded-lg">{boardTitleMap[title].icon}</div>
+              <div className="p-2 rounded-lg">{myPageMap[title].icon}</div>
               <div className="text-base ml-2">{title}</div>
             </div>
             <div className="flex">

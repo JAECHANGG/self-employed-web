@@ -4,12 +4,15 @@ import { Content } from "@/components/layout/Content";
 import { Header } from "@/components/layout/Header";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
-import { Inter } from "next/font/google";
+import { Noto_Sans_KR } from "next/font/google";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import "./globals.css";
 import { Provider } from "./provider";
 
-const inter = Inter({ subsets: ["latin"] });
+const notoSansKR = Noto_Sans_KR({
+  subsets: ["latin"],
+  weight: ["100", "300", "400", "500", "700", "900"],
+});
 
 export const metadata: Metadata = {
   title: { default: "장사의 신", template: "장사의 신 | %s" },
@@ -25,7 +28,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="bg-black">
-      <body className={inter.className}>
+      <body className={notoSansKR.className}>
         <AuthContext>
           <Provider>
             {session && <Header />}

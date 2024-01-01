@@ -1,6 +1,6 @@
 import { getBaseResponse, getErrorResponse } from "@/util/api-routes-util";
 import { NextRequest } from "next/server";
-import { getAllPosts, getPostsByCategory } from "../../../../../service/post";
+import { getPostsByCategory } from "../../../../../service/post";
 
 interface Context {
   params: {

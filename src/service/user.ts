@@ -9,6 +9,7 @@ import {
   GetSearchKeywordsPayload,
 } from "@/types/user/payload";
 import dbConnect from "@/util/database";
+import { sortPostByIdDtoByCreatedAtDesc } from "@/util/sort";
 import { convertUserByKeywordToSortUpdatedAt } from "./../util/converter/user-converter";
 
 export async function updateUser(userId: string, username: string) {
@@ -68,17 +69,19 @@ export async function getUserById(socialId: string) {
       },
     });
 
-    const collections = result.collections.map((post: PostByIdDto) => ({
-      id: post.id,
-      createdAt: post.createdAt,
-      title: post.title,
-      content: post.content,
-      category: post.category,
-      username: post.user.username,
-      likeNumber: post.like.length,
-      commentNumber: post.comments.length,
-      view: post.view,
-    }));
+    const collections = result.collections
+      .map((post: PostByIdDto) => ({
+        id: post.id,
+        createdAt: post.createdAt,
+        title: post.title,
+        content: post.content,
+        category: post.category,
+        username: post.user.username,
+        likeNumber: post.like.length,
+        commentNumber: post.comments.length,
+        view: post.view,
+      }))
+      .sort(sortPostByIdDtoByCreatedAtDesc);
 
     return { ...result._doc, collections, id: result._id };
   } catch (error) {

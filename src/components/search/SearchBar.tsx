@@ -24,13 +24,18 @@ export default function SearchBar() {
       console.log("검색어를 입력해주세요"); // TODO input validate 처리
       return;
     }
-    useCreateSearchKeyword.mutate({
-      userId: session?.user?.id || "",
-      keyword: keyword,
-    });
-
-    closeFullSearchDialog();
-    router.push(`/search/${encodeURIComponent(keyword)}`);
+    useCreateSearchKeyword.mutate(
+      {
+        userId: session?.user?.id || "",
+        keyword: keyword,
+      },
+      {
+        onSuccess: () => {
+          closeFullSearchDialog();
+          router.push(`/search/${encodeURIComponent(keyword)}`);
+        },
+      }
+    );
   };
 
   useEffect(() => {
@@ -46,7 +51,7 @@ export default function SearchBar() {
     <form onSubmit={handleSubmit} className="w-full px-2 mt-1">
       <input
         ref={inputRef}
-        className="w-full pl-4 pr-2 bg-gray-100 focus:outline-none overflow-hidden rounded-sm py-1"
+        className="w-full pl-4 pr-2 bg-[#121212] text-white focus:outline-none overflow-hidden rounded-md py-1 placeholder:text-[#FFFFFFE0]"
         placeholder="검색어를 입력해주세요"
         value={keyword}
         onChange={(event) => {

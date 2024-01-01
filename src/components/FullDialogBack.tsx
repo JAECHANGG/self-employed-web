@@ -9,7 +9,7 @@ interface Props {
 export const FullDialogBack = ({ onClick }: Props) => {
   return (
     <section>
-      <ArrowBackIosNewIcon onClick={onClick} />
+      <ArrowBackIosNewIcon className="text-white" onClick={onClick} />
     </section>
   );
 };

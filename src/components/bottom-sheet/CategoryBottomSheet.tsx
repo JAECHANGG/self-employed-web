@@ -1,12 +1,11 @@
-import { boardTitleMap } from "@/app/boards/page";
-import React from "react";
+import { BoardTitleMap } from "../board/BoardTitleMap";
 
 interface Props {
   category: string;
   onClick: (category: string) => void;
 }
 
-const { 인기게시판, 전체게시판, ...otherBoardTitleMap } = boardTitleMap;
+const { 인기게시판, 전체게시판, ...otherBoardTitleMap } = BoardTitleMap;
 
 export default function CategoryBottomSheet({ category, onClick }: Props) {
   const contents = Object.values(otherBoardTitleMap).filter(
@@ -18,7 +17,7 @@ export default function CategoryBottomSheet({ category, onClick }: Props) {
       {Object.keys(otherBoardTitleMap).map((category) => (
         <li
           key={category}
-          className="text-lg py-1 cursor-pointer"
+          className="text-lg font-light py-1 cursor-pointer text-white"
           onClick={() => onClick(otherBoardTitleMap[category].id)}
         >
           {category}

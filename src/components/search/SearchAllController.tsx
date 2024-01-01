@@ -17,6 +17,7 @@ export const SearchAllController = ({ keyword }: Props) => {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isFetching,
   } = useGetSearchPostsAllQuery({ keyword });
 
   const { observerElem } = useIntersectionObserver({
@@ -24,8 +25,6 @@ export const SearchAllController = ({ keyword }: Props) => {
     fetchNextPage,
   });
   const queryClient = useQueryClient();
-
-  console.log(searchAllPosts);
 
   useEffect(() => {
     return () => {
@@ -37,7 +36,7 @@ export const SearchAllController = ({ keyword }: Props) => {
     <InfiniteBoardContainer
       category={""}
       posts={searchAllPosts}
-      isLoading={isLoading}
+      isLoading={isFetching}
       isFetchingNextPage={isFetchingNextPage}
       observerElem={observerElem}
     />

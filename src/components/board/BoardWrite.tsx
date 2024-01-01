@@ -1,15 +1,15 @@
 "use client";
 
+import { useBottomSheet } from "@/hooks/useBottomSheet";
 import { useCreatePostMutation } from "@/query/post-query";
 import { CreatePostPayload } from "@/types/post/payload";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Spinner } from "../Spinner";
 import RightArrow from "../../../public/asset/svg/right_arrow.svg";
-import { useBottomSheet } from "@/hooks/useBottomSheet";
+import { Spinner } from "../Spinner";
 import CategoryBottomSheet from "../bottom-sheet/CategoryBottomSheet";
-import { boardTitleMap } from "@/app/boards/page";
+import { BoardTitleMap } from "./BoardTitleMap";
 
 interface Props {
   category: string;
@@ -62,11 +62,16 @@ export const BoardWrite = ({ category }: Props) => {
   }
 
   return (
-    <section className="h-full p-4">
+    <section className="h-full p-4 text-white">
       {createPostMutation.isLoading && <Spinner />}
       <div className="h-full">
+        <div className="flex justify-end mb-2">
+          <button className="right-2" onClick={handleClickCreateButton}>
+            완료
+          </button>
+        </div>
         <div
-          className="flex justify-between items-center pb-3 border-b border-slate-300 text-xl font-semibold"
+          className="flex justify-between items-center pb-3 border-b border-slate-300 text-lg font-normal"
           onClick={() =>
             openBottomSheet({
               title: "카테고리 선택",
@@ -80,15 +85,15 @@ export const BoardWrite = ({ category }: Props) => {
           }
         >
           <div>
-            {Object.keys(boardTitleMap).find(
-              (key) => boardTitleMap[key].id === payload.category
+            {Object.keys(BoardTitleMap).find(
+              (key) => BoardTitleMap[key].id === payload.category
             ) || "freeboard"}
           </div>
           <RightArrow />
         </div>
         <div className="pt-4 pb-3">
           <input
-            className="w-full text-2xl font-bold focus:outline-none"
+            className="w-full text-lg font-normal focus:outline-none bg-black pb-3 border-b border-slate-300 focus:border-white placeholder:text-[#363636]"
             placeholder="제목을 입력해주세요."
             onChange={handleChangePayload}
             name="title"
@@ -96,7 +101,7 @@ export const BoardWrite = ({ category }: Props) => {
           />
         </div>
         <textarea
-          className="w-full h-5/6 font-medium scrollbar-hide resize-none focus:outline-none"
+          className="w-full h-[200px] font-medium scrollbar-hide resize-none focus:outline-none bg-black mt-4  pb-3 border-b border-slate-300 focus:border-white placeholder:text-[#363636]"
           placeholder={`내용을 입력해주세요.
 
 다음과 같은 행위를 금지합니다.
@@ -109,9 +114,6 @@ export const BoardWrite = ({ category }: Props) => {
           value={payload.content}
         />
       </div>
-      <button className="absolute right-2" onClick={handleClickCreateButton}>
-        완료
-      </button>
     </section>
   );
 };

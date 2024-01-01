@@ -1,15 +1,15 @@
 "use client";
 
+import { useBottomSheet } from "@/hooks/useBottomSheet";
 import { useGetPostByIdQuery, useUpdatePostMutation } from "@/query/post-query";
 import { UpdatePostPayload } from "@/types/post/payload";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Spinner } from "../Spinner";
-import { useBottomSheet } from "@/hooks/useBottomSheet";
-import CategoryBottomSheet from "../bottom-sheet/CategoryBottomSheet";
 import RightArrow from "../../../public/asset/svg/right_arrow.svg";
-import { boardTitleMap } from "@/app/boards/page";
+import { Spinner } from "../Spinner";
+import CategoryBottomSheet from "../bottom-sheet/CategoryBottomSheet";
+import { BoardTitleMap } from "./BoardTitleMap";
 
 interface Props {
   slug: string;
@@ -60,10 +60,10 @@ export const BoardUpdate = ({ slug: id }: Props) => {
   }
 
   return (
-    <section className="h-full p-4 scrollbar-hide">
+    <section className="h-full p-4 scrollbar-hide text-white">
       <div className="h-full">
         <div
-          className="flex justify-between items-center pb-3 border-b border-slate-300 text-xl font-semibold"
+          className="flex justify-between items-center pb-3 border-b border-slate-300 text-xl font-semibold text-white"
           onClick={() =>
             openBottomSheet({
               title: "카테고리 선택",
@@ -77,8 +77,8 @@ export const BoardUpdate = ({ slug: id }: Props) => {
           }
         >
           <div>
-            {Object.keys(boardTitleMap).find(
-              (key) => boardTitleMap[key].id === post?.category
+            {Object.keys(BoardTitleMap).find(
+              (key) => BoardTitleMap[key].id === post?.category
             ) || "freeboard"}
           </div>
           <RightArrow />
